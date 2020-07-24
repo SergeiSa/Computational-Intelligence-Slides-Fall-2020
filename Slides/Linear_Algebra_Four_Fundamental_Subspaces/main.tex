@@ -1,0 +1,272 @@
+\documentclass{beamer}
+
+ \pdfmapfile{+sansmathaccent.map}
+
+
+\mode<presentation>
+{
+  \usetheme{Warsaw} % or try Darmstadt, Madrid, Warsaw, Rochester, CambridgeUS, ...
+  \usecolortheme{crane} % or try seahorse, beaver, crane, wolverine, ...
+  \usefonttheme{serif}  % or try serif, structurebold, ...
+  \setbeamertemplate{navigation symbols}{}
+  \setbeamertemplate{caption}[numbered]
+} 
+
+\renewcommand{\familydefault}{\rmdefault}
+
+
+\hypersetup{
+    colorlinks=true,
+    linkcolor=blue,
+    filecolor=blue,      
+    urlcolor=blue,
+}
+
+\usepackage{amsmath}
+\usepackage{mathtools}
+
+\DeclareMathOperator*{\argmin}{arg\,min}
+
+\usepackage{subcaption}
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+
+
+\usepackage{listings}
+\usepackage{color}
+\definecolor{mygreen}{rgb}{0,0.6,0}
+\definecolor{mygray}{rgb}{0.5,0.5,0.5}
+\definecolor{mymauve}{rgb}{0.58,0,0.82}
+\lstset{ 
+  backgroundcolor=\color{white},   % choose the background color; you must add \usepackage{color} or \usepackage{xcolor}; should come as last argument
+  basicstyle=\footnotesize,        % the size of the fonts that are used for the code
+  breakatwhitespace=false,         % sets if automatic breaks should only happen at whitespace
+  breaklines=true,                 % sets automatic line breaking
+  captionpos=b,                    % sets the caption-position to bottom
+  commentstyle=\color{mygreen},    % comment style
+  deletekeywords={...},            % if you want to delete keywords from the given language
+  escapeinside={\%*}{*)},          % if you want to add LaTeX within your code
+  extendedchars=true,              % lets you use non-ASCII characters; for 8-bits encodings only, does not work with UTF-8
+  firstnumber=0000,                % start line enumeration with line 0000
+  frame=single,	                   % adds a frame around the code
+  keepspaces=true,                 % keeps spaces in text, useful for keeping indentation of code (possibly needs columns=flexible)
+  keywordstyle=\color{blue},       % keyword style
+  language=Octave,                 % the language of the code
+  morekeywords={*,...},            % if you want to add more keywords to the set
+  numbers=left,                    % where to put the line-numbers; possible values are (none, left, right)
+  numbersep=5pt,                   % how far the line-numbers are from the code
+  numberstyle=\tiny\color{mygray}, % the style that is used for the line-numbers
+  rulecolor=\color{black},         % if not set, the frame-color may be changed on line-breaks within not-black text (e.g. comments (green here))
+  showspaces=false,                % show spaces everywhere adding particular underscores; it overrides 'showstringspaces'
+  showstringspaces=false,          % underline spaces within strings only
+  showtabs=false,                  % show tabs within strings adding particular underscores
+  stepnumber=2,                    % the step between two line-numbers. If it's 1, each line will be numbered
+  stringstyle=\color{mymauve},     % string literal style
+  tabsize=2,	                   % sets default tabsize to 2 spaces
+  title=\lstname                   % show the filename of files included with \lstinputlisting; also try caption instead of title
+}
+
+
+
+
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+
+\title{Linear Algebra, Four Fundamental Subspaces}
+\subtitle{Computational Intelligence, Lecture 1, part 2}
+\author{by Sergei Savin}
+\centering
+\date{Fall 2020}
+
+
+
+\begin{document}
+\maketitle
+
+
+\begin{frame}{Content}
+
+\begin{itemize}
+\item Motivating questions
+\item Four Fundamental Subspaces
+\item Null space
+\item Row space
+\item Homework
+\end{itemize}
+
+\end{frame}
+
+\begin{frame}{Motivating questions}
+% \framesubtitle{Parameter estimation}
+\begin{flushleft}
+
+You have a linear operator $\mathbf A$. Try to answer the following questions:
+
+\begin{itemize}
+    \item What are all vectors this operator can produce as outputs? How to find them?
+    \item Are there two inputs that make it produce the same output?
+    \item Are there inputs that produce zero as an output?
+    \item Are there outputs that cannot be produced? 
+    \item How to find all inputs that produce a unique output? 
+\end{itemize}
+
+These questions are directly related to the idea of fundamental subspaces of a linear operator.
+
+\end{flushleft}
+\end{frame}
+
+
+\begin{frame}{Four Fundamental Subspaces}
+% \framesubtitle{Parameter estimation}
+\begin{flushleft}
+
+One of the key ideas in the linear algebra is that every linear operator has four fundamental subspaces:
+
+\begin{itemize}
+    \item Null space
+    \item Row space
+    \item Column space
+    \item Left null space
+\end{itemize}
+
+\bigskip
+
+Our goal is to understand them. The usefulness of this understating is enormous.
+
+\end{flushleft}
+\end{frame}
+
+\begin{frame}{Null space}
+% \framesubtitle{Parameter estimation}
+\begin{flushleft}
+
+Consider the following task: find all solutions to the system of equations $\mathbf{A} \mathbf{x} = \mathbf{0}$.
+
+\bigskip
+
+It can be re-formulated as follows: find all elements of the \emph{null space} of $\mathbf{A}$.
+
+\begin{block}{Definition 1}
+  \emph{Null space} of $\mathbf{A}$ is the set of all vectors $\mathbf{x}$ that $\mathbf{A}$ maps to $\mathbf{0}$
+\end{block}
+
+\bigskip
+
+We will denote null space as $\mathcal{N}(\mathbf{A})$. In the literature, it is often denoted as $\text{ker}(\mathbf{A})$.
+
+\end{flushleft}
+\end{frame}
+
+
+\begin{frame}{Null space}
+\framesubtitle{Example}
+\begin{flushleft}
+
+Now we can find all solutions to the system of equations $\mathbf{A} \mathbf{x} = \mathbf{0}$ by using functions that generate an orthonormal \emph{basis} in the null space of $\mathbf{A}$. In MATLAB it is function \texttt{null}:
+
+\bigskip
+
+\texttt{N = null(A)}.
+
+\bigskip
+
+That is it! Space of solutions of $\mathbf{A} \mathbf{x} = \mathbf{0}$ is the span of the columns of $\mathbf{N}$, and all solutions $\mathbf{x}^*$ can be represented as $\mathbf{x}^* = \mathbf{N}\mathbf{z}$; for any $\mathbf{z}$ we get a unique solution, and for any solution - a unique $\mathbf{z}$.
+
+\end{flushleft}
+\end{frame}
+
+
+
+\begin{frame}{Row space}
+\framesubtitle{Part 1}
+\begin{flushleft}
+
+Consider another task: find all solutions to the system of equations $\mathbf{A} \mathbf{x} = \mathbf{y}$.
+
+\bigskip
+
+Assume we have two solutions to the system: $\mathbf{x}_1$ and $\mathbf{x}_2$. We know that $\mathbf{A} \mathbf{x}_1 = \mathbf{A} \mathbf{x}_2= \mathbf{y}$, hence $\mathbf{A} (\mathbf{x}_1 - \mathbf{x}_2) = \mathbf{0}$. In other words, the difference between any two solutions lies in the null space of $\mathbf{A}$.
+
+\bigskip
+
+On the other hand, let $\mathbf{x}^*$ be a solution, and $\mathbf{x}^N \in \mathcal{N}(\mathbf{A})$ be a vector in the null space of $\mathbf{A}$. Then $\mathbf{x}^* + \mathbf{x}^N$ is also a solution, since $\mathbf{A} (\mathbf{x}^* + \mathbf{x}^N) = \mathbf{A} \mathbf{x}^* + \mathbf{A} \mathbf{x}^N = \mathbf{A} \mathbf{x}^* = \mathbf{y}$.
+
+\bigskip
+
+Therefore, the solution space is given by a single partial solution $\mathbf{x}^p \notin \mathcal{N}(\mathbf{A})$ and the whole null space of $\mathbf{A}$.
+
+\end{flushleft}
+\end{frame}
+
+
+\begin{frame}{Row space}
+\framesubtitle{Part 2}
+\begin{flushleft}
+
+There are infinitely many ways to chose $\mathbf{x}^p$, since if $\mathbf{x}^p \notin \mathcal{N}(\mathbf{A})$, then $(\mathbf{x}^p + \mathbf{x}^N) \notin \mathcal{N}(\mathbf{A})$, if $\mathbf{x}^N \in \mathcal{N}(\mathbf{A})$. However: 
+
+\begin{block}{Statement 1}
+we can find only a single $\mathbf{x}^p$, such that $\mathbf{x}^p \cdot \mathbf{x}^N = 0, \ \forall \mathbf{x}^N \in \mathcal{N}(\mathbf{A})$, while $\mathbf{A} (\mathbf{x}^p + \mathbf{x}^N) = \mathbf{y}$.
+\end{block}
+
+\bigskip
+
+Such $\mathbf{x}^p$ lies in the \emph{row space} of $\mathbf{A}$. 
+
+\begin{block}{Definition 2}
+\emph{Row space} of $\mathbf{A}$ is the set of all inputs to $\mathbf{A}$ that have a zero projection onto its null space.
+\end{block}
+
+\end{flushleft}
+\end{frame}
+
+
+
+
+
+\begin{frame}{Row space}
+\framesubtitle{Example}
+\begin{flushleft}
+
+Assuming $\mathbf{A} \mathbf{x} = \mathbf{y}$ has at least one solution, we can find it by solving \emph{least squares} problem, or equivalently, using a pseudo-inverse:
+
+\bigskip
+
+\texttt{xp = pinv(A)*y}.
+
+\bigskip
+
+Now all solutions to the original problem are given as $\mathbf{x}^* = \mathbf{x}^p + \mathbf{N} \mathbf{z}$, using previous notation.
+
+\end{flushleft}
+\end{frame}
+
+
+
+\begin{frame}{Homework}
+% \framesubtitle{Parameter estimation}
+\begin{flushleft}
+
+Prove Statement 1.
+
+\end{flushleft}
+\end{frame}
+
+
+
+
+\begin{frame}
+\centerline{Lecture slides are available via Moodle.}
+\bigskip
+\centerline{You can help improve these slides at:}
+
+\centerline{\href{https://github.com/SergeiSa/Computational-Intelligence-Slides-Fall-2020}{github.com/SergeiSa/Computational-Intelligence-Slides-Fall-2020}}
+
+
+\bigskip
+\centerline{Check Moodle for additional links, videos, textbook suggestions.}
+\end{frame}
+
+\end{document}
