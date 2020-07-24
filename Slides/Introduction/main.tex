@@ -1,0 +1,272 @@
+\documentclass{beamer}
+
+ \pdfmapfile{+sansmathaccent.map}
+
+
+\mode<presentation>
+{
+  \usetheme{Warsaw} % or try Darmstadt, Madrid, Warsaw, Rochester, CambridgeUS, ...
+  \usecolortheme{crane} % or try seahorse, beaver, crane, wolverine, ...
+  \usefonttheme{serif}  % or try serif, structurebold, ...
+  \setbeamertemplate{navigation symbols}{}
+  \setbeamertemplate{caption}[numbered]
+} 
+
+\renewcommand{\familydefault}{\rmdefault}
+
+\usepackage{amsmath}
+\usepackage{mathtools}
+
+\DeclareMathOperator*{\argmin}{arg\,min}
+
+\usepackage{subcaption}
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+
+
+\usepackage{listings}
+\usepackage{color}
+\definecolor{mygreen}{rgb}{0,0.6,0}
+\definecolor{mygray}{rgb}{0.5,0.5,0.5}
+\definecolor{mymauve}{rgb}{0.58,0,0.82}
+\lstset{ 
+  backgroundcolor=\color{white},   % choose the background color; you must add \usepackage{color} or \usepackage{xcolor}; should come as last argument
+  basicstyle=\footnotesize,        % the size of the fonts that are used for the code
+  breakatwhitespace=false,         % sets if automatic breaks should only happen at whitespace
+  breaklines=true,                 % sets automatic line breaking
+  captionpos=b,                    % sets the caption-position to bottom
+  commentstyle=\color{mygreen},    % comment style
+  deletekeywords={...},            % if you want to delete keywords from the given language
+  escapeinside={\%*}{*)},          % if you want to add LaTeX within your code
+  extendedchars=true,              % lets you use non-ASCII characters; for 8-bits encodings only, does not work with UTF-8
+  firstnumber=0000,                % start line enumeration with line 0000
+  frame=single,	                   % adds a frame around the code
+  keepspaces=true,                 % keeps spaces in text, useful for keeping indentation of code (possibly needs columns=flexible)
+  keywordstyle=\color{blue},       % keyword style
+  language=Octave,                 % the language of the code
+  morekeywords={*,...},            % if you want to add more keywords to the set
+  numbers=left,                    % where to put the line-numbers; possible values are (none, left, right)
+  numbersep=5pt,                   % how far the line-numbers are from the code
+  numberstyle=\tiny\color{mygray}, % the style that is used for the line-numbers
+  rulecolor=\color{black},         % if not set, the frame-color may be changed on line-breaks within not-black text (e.g. comments (green here))
+  showspaces=false,                % show spaces everywhere adding particular underscores; it overrides 'showstringspaces'
+  showstringspaces=false,          % underline spaces within strings only
+  showtabs=false,                  % show tabs within strings adding particular underscores
+  stepnumber=2,                    % the step between two line-numbers. If it's 1, each line will be numbered
+  stringstyle=\color{mymauve},     % string literal style
+  tabsize=2,	                   % sets default tabsize to 2 spaces
+  title=\lstname                   % show the filename of files included with \lstinputlisting; also try caption instead of title
+}
+
+
+
+
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+
+\title{Introduction}
+\subtitle{Computational Intelligence, Lecture 1, part 1}
+\author{by Sergei Savin}
+\centering
+\date{Fall 2020}
+
+
+
+\begin{document}
+\maketitle
+
+
+\begin{frame}{Content}
+
+\begin{itemize}
+\item *****
+\item *****
+\item *****
+\item *****
+\end{itemize}
+
+\end{frame}
+
+
+
+\begin{frame}{Motivation}
+% \framesubtitle{Parameter estimation}
+\begin{flushleft}
+
+\begin{block}{Statement}
+  A lot of modern methods, computations and work in general in Robotics are backed by numerical optimization tools.
+\end{block}
+
+\begin{block}{What we want?}
+  To go from a "I hope it works" to a solid understanding of the mathematics and use-cases of those tools.
+\end{block}
+
+\begin{block}{Why we want it?}
+  It should allow us to solve a much wider range of problems, and solve them much more effectively.
+\end{block}
+
+\end{flushleft}
+\end{frame}
+
+
+\begin{frame}{Motivating example}
+% \framesubtitle{Parameter estimation}
+\begin{flushleft}
+
+We have the following problem: find such $\mathbf x$ that minimizes $\mathbf x^\top \mathbf M \mathbf x$, while $\mathbf C \mathbf x = \mathbf y$. In other words:
+
+\begin{equation} \label{eq:Example1:1}
+\begin{aligned}
+& \underset{\mathbf  x}{\text{minimize}}
+& & \mathbf x^\top \mathbf M \mathbf x, \\
+& \text{subject to}
+& & \mathbf C \mathbf x = \mathbf y.
+\end{aligned}
+\end{equation}
+
+More concrete:
+
+\begin{equation} \label{eq:Example1:2}
+\begin{aligned}
+& \underset{\mathbf  x}{\text{minimize}}
+& & \begin{bmatrix} x_1 & x_2 & x_3 \end{bmatrix}
+\begin{bmatrix}  
+   1 & 0 & 1 \\
+   0 & 5 & 0 \\
+   1 & 0 & 3 \\
+   \end{bmatrix}
+\begin{bmatrix} x_1 \\ x_2 \\ x_3 \end{bmatrix}, \\
+& \text{subject to}
+& & \begin{bmatrix} 1 & 7 & 2 \end{bmatrix}
+\begin{bmatrix} x_1 \\ x_2 \\ x_3 \end{bmatrix}
+= 1.
+\end{aligned}
+\end{equation}
+
+How do we solve it?
+
+\end{flushleft}
+\end{frame}
+
+
+
+\begin{frame}[fragile]{Motivating example}
+\framesubtitle{fmincon}
+\begin{flushleft}
+
+One very popular way of doing it is by use of a general-purpose local optimization solver, such as \texttt{fmincon} provided by MATLAB. Here is one possible solution:
+
+\begin{lstlisting}[language=Matlab]
+M = [1 0 1; 0 5 0; 1 0 3]; 
+C = [1 7 2]; 
+y = 1;
+
+fnc = @(x) x'*M*x;
+con = @(x) deal([], C*x-y);
+x = fmincon(fnc, zeros(3, 1), [],[],[],[],[],[], con)
+\end{lstlisting}
+
+Average solution time is \textbf{4.8} ms (this depends on many factors, so treat it only as a relative information). 
+Solution is $\mathbf{x} = \begin{bmatrix} 0.0442 & 0.1239 & 0.0442 \end{bmatrix}$.
+
+\end{flushleft}
+\end{frame}
+
+
+\begin{frame}[fragile]{Motivating example}
+\framesubtitle{quadprog}
+\begin{flushleft}
+
+A more sophisticated, but still a very straightforward approach is to use a dedicated solver for this class of problems \texttt{quadprog} provided by MATLAB. Here is the solution:
+
+\begin{lstlisting}[language=Matlab]
+M = [1 0 1; 0 5 0; 1 0 3]; 
+C = [1 7 2]; 
+y = 1;
+
+x = quadprog(M,[],[],[],C,y)
+\end{lstlisting}
+
+Average solution time is \textbf{0.56} ms, an order of magnitude less than with \texttt{fmincon}.
+
+\end{flushleft}
+\end{frame}
+
+
+
+\begin{frame}[fragile]{Motivating example}
+\framesubtitle{SVD-based solution}
+\begin{flushleft}
+
+We can use an algebraic solution, based on SVD decomposition (or its derivative methods - null space and pseudo-inverse), as follows:
+
+\begin{lstlisting}[language=Matlab]
+M = [1 0 1; 0 5 0; 1 0 3]; 
+C = [1 7 2]; 
+y = 1;
+
+tol = 10^(-5);
+[P, N] = pinv_null(C, tol);
+x = ( eye(3) - N*((N'*M*N) \ (N'*M)) ) * P*y
+\end{lstlisting}
+
+Where \texttt{pinv\_null} is a function combining \texttt{pinv} and \texttt{null}, obtained from a single SVD decomposition.
+
+Average solution time is \textbf{0.027} ms, $\sim 20$ times faster than \texttt{quadprog} and $\sim 200$ times faster than \texttt{fmincon}.
+
+\end{flushleft}
+\end{frame}
+
+
+
+\begin{frame}[fragile]{Motivating example}
+\framesubtitle{CVX-based solution}
+\begin{flushleft}
+
+Finally, we can invoke one of the most powerful convex optimization tools with a user-friendly coding style - CVX:
+
+\begin{lstlisting}[language=Matlab]
+M = [1 0 1; 0 5 0; 1 0 3];
+C = [1 7 2];
+y = 1;
+
+cvx_begin
+variables x(3);
+minimize( x' * M * x );
+subject to
+    C*x == y;
+cvx_end
+\end{lstlisting}
+
+However, we will see that the overhead for the call to the solver for this task is excessive. Average solution time is \textbf{282} ms, which is $\sim 60$ times slower than \texttt{fmincon}.
+
+\end{flushleft}
+\end{frame}
+
+
+
+
+\begin{frame}{Homework}
+% \framesubtitle{Parameter estimation}
+\begin{flushleft}
+
+Solve problem \eqref{eq:Example1:2} by the method you know and understand.
+
+\end{flushleft}
+\end{frame}
+
+
+
+
+\begin{frame}
+\centerline{Lecture slides are available via Moodle.}
+\bigskip
+\centerline{You can help improve these slides at:}
+\centerline{\url{https://github.com/SergeiSa/Linear-Control-Slides-Spring-2020}}
+\bigskip
+\centerline{Check Moodle for additional links, videos, textbook suggestions.}
+\end{frame}
+
+\end{document}
