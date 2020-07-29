@@ -75,7 +75,7 @@
 
 
 \title{Linear Algebra, Four Fundamental Subspaces}
-\subtitle{Computational Intelligence, Lecture 1, part 2}
+\subtitle{Computational Intelligence, Lecture 2}
 \author{by Sergei Savin}
 \centering
 \date{Fall 2020}
@@ -164,7 +164,7 @@ We will denote null space as $\mathcal{N}(\mathbf{A})$. In the literature, it is
 \framesubtitle{Example}
 \begin{flushleft}
 
-Now we can find all solutions to the system of equations $\mathbf{A} \mathbf{x} = \mathbf{0}$ by using functions that generate an orthonormal \emph{basis} in the null space of $\mathbf{A}$. In MATLAB it is function \texttt{null}:
+Now we can find all solutions to the system of equations $\mathbf{A} \mathbf{x} = \mathbf{0}$ by using functions that generate an \emph{orthonormal basis} in the null space of $\mathbf{A}$. In MATLAB it is function \texttt{null}:
 
 \bigskip
 
@@ -195,7 +195,7 @@ On the other hand, let $\mathbf{x}^*$ be a solution, and $\mathbf{x}^N \in \math
 
 \bigskip
 
-Therefore, the solution space is given by a single partial solution $\mathbf{x}^p \notin \mathcal{N}(\mathbf{A})$ and the whole null space of $\mathbf{A}$.
+Therefore, the solution space is given by a single particular solution $\mathbf{x}^p \notin \mathcal{N}(\mathbf{A})$ and the whole null space of $\mathbf{A}$.
 
 \end{flushleft}
 \end{frame}
@@ -249,7 +249,10 @@ Now all solutions to the original problem are given as $\mathbf{x}^* = \mathbf{x
 % \framesubtitle{Parameter estimation}
 \begin{flushleft}
 
-Prove Statement 1.
+\begin{itemize}
+\item Prove Statement 1.
+\item Come up with a way to check if a vector is in the row space of $\mathbf{A}$.
+\end{itemize}
 
 \end{flushleft}
 \end{frame}

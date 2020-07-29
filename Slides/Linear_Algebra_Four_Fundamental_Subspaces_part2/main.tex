@@ -1,0 +1,399 @@
+\documentclass{beamer}
+
+ \pdfmapfile{+sansmathaccent.map}
+
+
+\mode<presentation>
+{
+  \usetheme{Warsaw} % or try Darmstadt, Madrid, Warsaw, Rochester, CambridgeUS, ...
+  \usecolortheme{crane} % or try seahorse, beaver, crane, wolverine, ...
+  \usefonttheme{serif}  % or try serif, structurebold, ...
+  \setbeamertemplate{navigation symbols}{}
+  \setbeamertemplate{caption}[numbered]
+} 
+
+\renewcommand{\familydefault}{\rmdefault}
+
+
+\hypersetup{
+    colorlinks=true,
+    linkcolor=blue,
+    filecolor=blue,      
+    urlcolor=blue,
+}
+
+\usepackage{amsmath}
+\usepackage{mathtools}
+
+\DeclareMathOperator*{\argmin}{arg\,min}
+
+\usepackage{subcaption}
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+
+
+
+\usepackage{listings}
+\usepackage{color}
+\definecolor{mygreen}{rgb}{0,0.6,0}
+\definecolor{mygray}{rgb}{0.5,0.5,0.5}
+\definecolor{mymauve}{rgb}{0.58,0,0.82}
+\lstset{ 
+  backgroundcolor=\color{white},   % choose the background color; you must add \usepackage{color} or \usepackage{xcolor}; should come as last argument
+  basicstyle=\footnotesize,        % the size of the fonts that are used for the code
+  breakatwhitespace=false,         % sets if automatic breaks should only happen at whitespace
+  breaklines=true,                 % sets automatic line breaking
+  captionpos=b,                    % sets the caption-position to bottom
+  commentstyle=\color{mygreen},    % comment style
+  deletekeywords={...},            % if you want to delete keywords from the given language
+  escapeinside={\%*}{*)},          % if you want to add LaTeX within your code
+  extendedchars=true,              % lets you use non-ASCII characters; for 8-bits encodings only, does not work with UTF-8
+  firstnumber=0000,                % start line enumeration with line 0000
+  frame=single,	                   % adds a frame around the code
+  keepspaces=true,                 % keeps spaces in text, useful for keeping indentation of code (possibly needs columns=flexible)
+  keywordstyle=\color{blue},       % keyword style
+  language=Octave,                 % the language of the code
+  morekeywords={*,...},            % if you want to add more keywords to the set
+  numbers=left,                    % where to put the line-numbers; possible values are (none, left, right)
+  numbersep=5pt,                   % how far the line-numbers are from the code
+  numberstyle=\tiny\color{mygray}, % the style that is used for the line-numbers
+  rulecolor=\color{black},         % if not set, the frame-color may be changed on line-breaks within not-black text (e.g. comments (green here))
+  showspaces=false,                % show spaces everywhere adding particular underscores; it overrides 'showstringspaces'
+  showstringspaces=false,          % underline spaces within strings only
+  showtabs=false,                  % show tabs within strings adding particular underscores
+  stepnumber=2,                    % the step between two line-numbers. If it's 1, each line will be numbered
+  stringstyle=\color{mymauve},     % string literal style
+  tabsize=2,	                   % sets default tabsize to 2 spaces
+  title=\lstname                   % show the filename of files included with \lstinputlisting; also try caption instead of title
+}
+
+
+
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+
+\title{Linear Algebra, Four Fundamental Subspaces}
+\subtitle{Computational Intelligence, Lecture 3}
+\author{by Sergei Savin}
+\centering
+\date{Fall 2020}
+
+
+
+\begin{document}
+\maketitle
+
+
+\begin{frame}{Content}
+
+\begin{itemize}
+\item ***
+\item ***
+\item Homework
+\end{itemize}
+
+\end{frame}
+
+\begin{frame}{Projection}
+% \framesubtitle{Parameter estimation}
+\begin{flushleft}
+
+Previously we used the term \emph{projection}. What does it mean? 
+
+\begin{block}{Definition 1}
+For linear space $\mathcal{L} \subset \mathbb{R}^n$, an orthogonal projector $\mathbf{P}$ onto it has properties: 
+\begin{itemize}
+    \item $\forall \mathbf{x} \in \mathbb{R}^n$, $\mathbf{P}\mathbf{x} \in \mathcal{L}$
+    \item $\forall \mathbf{x} \in \mathcal{L}$, $\mathbf{P}\mathbf{x} = \mathbf{x}$
+    \item $\forall \mathbf{y} \in \mathcal{L}$, $\mathbf{y}^\top (\mathbf{I} - \mathbf{P}) \mathbf{x} = 0$
+\end{itemize}
+\end{block}
+
+\bigskip
+
+It follows that $\mathbf{P}\mathbf{P} = \mathbf{P}$. Also notice that a projection always maps the space onto itself: $\mathbf{P}: \ \mathbb{R}^n \rightarrow \mathbb{R}^n$.
+
+\bigskip
+
+In other words, an orthogonal projector takes the part of a vector that lies in the linear space, and cuts the rest off. We can refer to it as \emph{projection}.
+
+\end{flushleft}
+\end{frame}
+
+
+
+\begin{frame}{Projection}
+\framesubtitle{How to find a projector}
+\begin{flushleft}
+
+As long as we know an orthonormal basis $\mathbf{B}$ in the linear space $\mathcal{L}$, we can find a projector $\mathbf{P}$ on that space as follows:
+%
+\begin{equation}
+    \mathbf{P} = \mathbf{B} \mathbf{B}^\top
+\end{equation}
+
+You can think of it as follows: $\mathbf{B} \mathbf{B}^\top \mathbf{x}$ first finds a decomposition of $\mathbf{x}$ on the orthonormal set of vectors, where all parts of $\mathbf{x}$ not in the span of $\mathbf{B}$ will be mapped to zero; next, it maps this decomposition back into the original coordinates, but the part not-in-the-span-of-$\mathbf{B}$ is lost.
+
+\bigskip
+
+In general, if linear space $\mathcal{L}$ is given as a span of the columns of some matrix $\mathbf{L}$, the projector $\mathbf{P}$ on that space can be generated as follows:
+%
+\begin{equation}
+    \mathbf{P} = \mathbf{L} \mathbf{L}^+ = \mathbf{L} (\mathbf{L}^\top \mathbf{L})^{-1} \mathbf{L}^\top
+\end{equation}
+
+\end{flushleft}
+\end{frame}
+
+
+\begin{frame}{Projection}
+\framesubtitle{Use case}
+\begin{flushleft}
+
+Remember the problem: find all solutions to the system of equations $\mathbf{A} \mathbf{x} = \mathbf{y}$. Assume we found a single solution $\mathbf{x}^s$. If we know an orthonormal basis $\mathbf{N}$ in the null space of $\mathbf{A}$ (which we get by calling \texttt{null()} in MATLAB, for example), then we can find a projector $\mathbf{P}$ onto that space and find which part of $\mathbf{x}^s$ lies outside it:
+
+\begin{equation}
+\mathbf{P} = \mathbf{N} \mathbf{N}^\top
+\end{equation}
+\begin{equation}
+\mathbf{x}^p = (\mathbf{I} - \mathbf{P}) \mathbf{x}^s
+\end{equation}
+
+Thus, all solutions are found as $(\mathbf{I} - \mathbf{N} \mathbf{N}^\top) \mathbf{x}^s + \mathbf{N}\mathbf{z}, \ \forall \mathbf{z}$
+
+\end{flushleft}
+\end{frame}
+
+
+
+\begin{frame}{Orthogonal compliment}
+% \framesubtitle{Parameter estimation}
+\begin{flushleft}
+
+Remember how we defined row space: \emph{Row space} of $\mathbf{A}$ is the set of all inputs to $\mathbf{A}$ that have a zero projection onto its null space.
+
+\bigskip
+
+Now we can observe that if $\mathbf{P}$ is a projector onto the null space of $\mathbf{A}$, then the row space of $\mathbf{A}$ is the set of all vectors $\mathbf{x}$, such that $\mathbf{P}\mathbf{x} = \mathbf{0}$. 
+
+\bigskip
+
+We can observe that $(\mathbf{I} - \mathbf{P})$ is a projector onto the row space. In a sense, row space contains everything left by the null space, and together then span all inputs on the matrix $\mathbf{A}$. They compliment each other, and they are orthogonal to each other. In other words, row space is an \emph{orthogonal compliment} of null space, and vice versa. 
+
+\end{flushleft}
+\end{frame}
+
+
+\begin{frame}{Column space}
+% \framesubtitle{Example}
+\begin{flushleft}
+
+Consider the problem. Current state of the system is given as $\mathbf{x}_i \in \mathbb{R}^n$, and we do not know it. At the next point in time, the state f the system is given as $\mathbf{x}_{i+1} = \mathbf{A} \mathbf{x}_{i}$. What are all possible next states that we can expect?
+
+\bigskip
+
+To solve it, we need to find all possible outputs of the linear operator $\mathbf{A}$. This is called \emph{column space} of $\mathbf{A}$. 
+
+\bigskip
+
+In MATLAB it can be constructed by calling function \texttt{orth()}. Both \texttt{orth()} and \texttt{null()} (as well as \texttt{rank()} and \texttt{pinv()}) simply call \texttt{svd()} and perform minimal computations on the resulting decomposition. You can check it by typing \texttt{open orth} in MATLAB command window.
+
+
+\end{flushleft}
+\end{frame}
+
+
+\begin{frame}{Left null space}
+% \framesubtitle{Example}
+\begin{flushleft}
+
+Consider a dual problem. Current state of the system is given as $\mathbf{x}_i \in \mathbb{R}^n$, and we do not know it. At the next point in time, the state f the system is given as $\mathbf{x}_{i+1} = \mathbf{A} \mathbf{x}_{i}$. Which values the next states will not assume?
+
+\bigskip
+
+Notice, that this is the same as asking what is the orthogonal compliment of the column space of $\mathbf{A}$. It is called \emph{left null space}.
+
+\bigskip
+
+Let $\mathbf{P}$ be the projector onto the column space of $\mathbf{A}$: $\mathbf{P} = \mathbf{A}\mathbf{A}^+$. Then $\mathbf{Q} = (\mathbf{I} - \mathbf{P}) = (\mathbf{I} - \mathbf{A}\mathbf{A}^+)$ is a projector onto the left null space of $\mathbf{A}$.
+
+
+\end{flushleft}
+\end{frame}
+
+
+\begin{frame}{Row space and left null space bases}
+% \framesubtitle{Example}
+\begin{flushleft}
+
+While MATLAB does not provide tools to directly find orthonormal bases in the row space and left null space of a matrix, it can be done by tweaking the code for \texttt{orth()} and \texttt{null()}. 
+
+\bigskip
+
+Your HW: write down formulas for \texttt{orth()}, \texttt{null()} and their orthogonal compliments, and implement those in MATLAB or your language of choice that provides and SVD decomposition implementation.
+
+\bigskip
+
+We will define operators \texttt{row()} and \texttt{lnull()} to refer to bases in those two spaces.
+
+\end{flushleft}
+\end{frame}
+
+
+
+\begin{frame}{Example}
+% \framesubtitle{Example}
+\begin{flushleft}
+
+Now that we have such powerful tools, we can solve difficult problems easily. Consider this one. Linear time-invariant (LTI) dynamical system is described as:
+
+\begin{equation}
+    \dot{\mathbf{x}} = \mathbf{A} \mathbf{x} + \mathbf{B}_1 \mathbf{u}_1 + \mathbf{B}_2 \mathbf{u}_2
+\end{equation}
+
+Find such control inputs $\mathbf{u}^*_1$, $\mathbf{u}^*_2$ that state $\mathbf{x}^*$ becomes a fixed point. Additionally, assume that $\mathbf{u}^*_1$ is free to use, while $\mathbf{u}^*_2$ should be used as sparingly as possible.
+
+\bigskip
+
+This can be formulated in the language of optimization as follows:
+
+\begin{equation}
+\begin{aligned}
+& \underset{\mathbf{u}_1, \mathbf{u}_2}{\text{minimize}}
+& & || \mathbf{u}_2 ||, \\
+& \text{subject to}
+& & \mathbf{A} \mathbf{x}^* + \mathbf{B}_1 \mathbf{u}_1 + \mathbf{B}_2 \mathbf{u}_2 = \mathbf{0}
+\end{aligned}
+\end{equation}
+
+\end{flushleft}
+\end{frame}
+
+
+\begin{frame}{Example}
+\framesubtitle{part 2}
+\begin{flushleft}
+
+In order to check that the problem has at least one solution we need to make sure that there are such inputs $\mathbf{u}^*_1$, $\mathbf{u}^*_2$ that state $\mathbf{x}^*$ becomes a fixed point. In other words, vector $\mathbf{A}\mathbf{x}^*$ should lie in the span of the columns of the matrix $[\mathbf{B}_1 \ \mathbf{B}_2]$. Which is the same as saying that its projection on the compliment on this column space (left null space of $[\mathbf{B}_1 \ \mathbf{B}_2]$) is zero:
+
+\begin{equation}
+    (\mathbf{I} - [\mathbf{B}_1 \ \mathbf{B}_2] [\mathbf{B}_1 \ \mathbf{B}_2]^+) \mathbf{A}\mathbf{x}^* = \mathbf{0}
+\end{equation}
+
+All solutions to the problem $\mathbf{A} \mathbf{x}^* + \mathbf{B}_1 \mathbf{u}_1 + \mathbf{B}_2 \mathbf{u}_2 = \mathbf{0}$ can be found as:
+
+\begin{equation}
+    \mathbf{u} = [\mathbf{B}_1 \ \mathbf{B}_2]^+ \mathbf{A}\mathbf{x}^* + \text{null}([\mathbf{B}_1 \ \mathbf{B}_2])\mathbf{z}, \ \forall \mathbf{z}
+\end{equation}
+
+\end{flushleft}
+\end{frame}
+
+
+
+\begin{frame}{Example}
+\framesubtitle{part 3}
+\begin{flushleft}
+
+Now we need to pick one solution out of all of them, based on the criteria that it minimizes $\mathbf{u}_2$. We can solve it as an optimization (by thinking about the derivatives of the objective/cost function), but it also can be solved as a projection.
+
+\bigskip
+
+Let us define projector $\mathbf{P} = \mathbf{B}_1 \mathbf{B}^+_1$. We can prove that $\mathbf{P} \mathbf{B}_2 \mathbf{u}^*_2 = \mathbf{0}$. Assume $\mathbf{P} \mathbf{B}_2 \mathbf{u}^*_2 = \mathbf{a}$, then $\mathbf{u}^*_2 =  \mathbf{u}^0_2 + \mathbf{u}^a_2$, where $\mathbf{u}^0_2$ is in the null space of $\mathbf{P} \mathbf{B}_2$ and $\mathbf{u}^a_2$ is in the row space of $\mathbf{P} \mathbf{B}_2$, or equivalently $\mathbf{P} \mathbf{B}_2 \mathbf{u}^0_2 = \mathbf{0}$, $(\mathbf{I} - \mathbf{P}) \mathbf{B}_2 \mathbf{u}^0_2 = \mathbf{b}$, and $\mathbf{P} \mathbf{B}_2 \mathbf{u}^a_2 = \mathbf{a}$, $(\mathbf{I} - \mathbf{P}) \mathbf{B}_2 \mathbf{u}^a_2 = \mathbf{0}$. This gives as solution:
+
+\begin{equation}
+    \mathbf{A} \mathbf{x}^* + \mathbf{B}_1 \mathbf{u}^*_1 + \mathbf{B}_2 \mathbf{u}^0_2 + \mathbf{B}_2 \mathbf{u}^a_2 = \mathbf{0}
+\end{equation}
+
+\end{flushleft}
+\end{frame}
+
+
+\begin{frame}{Example}
+\framesubtitle{part 4}
+\begin{flushleft}
+
+But since $\mathbf{a} \in \text{span}(\mathbf{B}_1)$ we can also provide an alternative solution:
+
+\begin{equation}
+    \mathbf{A} \mathbf{x}^* + \mathbf{B}_1 \mathbf{u}^**_1 + \mathbf{B}_2 \mathbf{u}^0_2 = \mathbf{0}
+\end{equation}
+%
+where $\mathbf{u}^**_1 = \mathbf{u}^*_1 + \mathbf{B}^+_1 \mathbf{a}$.
+
+\bigskip
+
+Since $\mathbf{u}^0_2$ and $\mathbf{u}^a_2$ and belong to orthogonal subspaces, $||\mathbf{u}^0_2 + \mathbf{u}^a_2|| \geq ||\mathbf{u}^0_2||$. Therefore the alternative solution provides smaller norm $\mathbf{u}_2$, hence $\mathbf{a} = \mathbf{0}$ and $\mathbf{u}^a_2 = \mathbf{0}$ and $\mathbf{P} \mathbf{B}_2 \mathbf{u}^*_2 = \mathbf{0}$.
+
+\bigskip
+
+Since $\mathbf{P} \mathbf{B}_2 \mathbf{u}^*_2 = \mathbf{0}$, $(\mathbf{I} - \mathbf{P}) \mathbf{B}_2 \mathbf{u}^*_2 = \mathbf{u}^*_2$, and while $(\mathbf{I} - \mathbf{P}) \mathbf{B}_1 = \mathbf{0}$.
+
+
+\end{flushleft}
+\end{frame}
+
+
+
+
+\begin{frame}{Example}
+\framesubtitle{part 5}
+\begin{flushleft}
+
+ Multiplying our constraint by $(\mathbf{I} - \mathbf{P})$ we attain:
+
+\begin{equation}
+    (\mathbf{I} - \mathbf{P}) \mathbf{A} \mathbf{x}^* + (\mathbf{I} - \mathbf{P}) \mathbf{B}_2 \mathbf{u}^*_2 = \mathbf{0}
+\end{equation}
+
+Which has an exact solution:
+
+\begin{equation}
+\label{Solution_u2}
+     \mathbf{u}^*_2 = -((\mathbf{I} - \mathbf{P}) \mathbf{B}_2)^+(\mathbf{I} - \mathbf{P}) \mathbf{A} \mathbf{x}^*
+\end{equation}
+
+Which is the solution to the original problem; $\mathbf{u}^*_1$ can be obtained as follows:
+
+\begin{equation}
+\label{Solution_u1}
+      \mathbf{u}^*_1  = -\mathbf{B}^+_1(\mathbf{A} \mathbf{x}^* + \mathbf{B}_2 \mathbf{u}^*_2)
+\end{equation}
+
+
+\end{flushleft}
+\end{frame}
+
+
+\begin{frame}{Homework}
+% \framesubtitle{Parameter estimation}
+\begin{flushleft}
+
+\begin{itemize}
+    \item Prove the following for an orthogonal projector $\mathbf{P}$: $(\mathbf{I} - \mathbf{P})(\mathbf{I} - \mathbf{P}) = (\mathbf{I} - \mathbf{P})$
+    \item Write down formulas for \texttt{orth()}, \texttt{null()} and their orthogonal compliments, and implement those in MATLAB or your language of choice that provides and SVD decomposition implementation.
+    \item Prove that \eqref{Solution_u2} will always have a solution that turns $((\mathbf{I} - \mathbf{P}) \mathbf{B}_2) \mathbf{u}^*_2 = -(\mathbf{I} - \mathbf{P}) \mathbf{A} \mathbf{x}^*$ into equality.
+    \item Prove that \eqref{Solution_u1} will always have a solution that turns $\mathbf{B}_1 \mathbf{u}^*_1 = -\mathbf{A} \mathbf{x}^* - \mathbf{B}_2 \mathbf{u}^*_2$ into equality.
+\end{itemize}
+
+\end{flushleft}
+\end{frame}
+
+
+
+
+\begin{frame}
+\centerline{Lecture slides are available via Moodle.}
+\bigskip
+\centerline{You can help improve these slides at:}
+
+\centerline{\href{https://github.com/SergeiSa/Computational-Intelligence-Slides-Fall-2020}{github.com/SergeiSa/Computational-Intelligence-Slides-Fall-2020}}
+
+
+\bigskip
+\centerline{Check Moodle for additional links, videos, textbook suggestions.}
+\end{frame}
+
+\end{document}
