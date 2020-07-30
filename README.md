@@ -1,9 +1,8 @@
-# Computational-Intelligence-Slides-Fall-2020
-
-Slides:
+# Slides:
 * Lecture 1 - https://github.com/SergeiSa/Computational-Intelligence-Slides-Fall-2020/tree/master/Slides/Introduction
 * Lecture 2 - https://github.com/SergeiSa/Computational-Intelligence-Slides-Fall-2020/tree/master/Slides/Linear_Algebra_Four_Fundamental_Subspaces
 * Lecture 3 - https://github.com/SergeiSa/Computational-Intelligence-Slides-Fall-2020/tree/master/Slides/Linear_Algebra_Four_Fundamental_Subspaces_part2
+* Lecture 4 - https://github.com/SergeiSa/Computational-Intelligence-Slides-Fall-2020/tree/master/Slides/Linear_Algebra_Four_Fundamental_Subspaces_use_case
 
 # For contributors:
 
