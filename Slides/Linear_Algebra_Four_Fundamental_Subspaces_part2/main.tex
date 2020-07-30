@@ -74,7 +74,7 @@
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 
 
-\title{Linear Algebra, Four Fundamental Subspaces}
+\title{Linear Algebra, Four Fundamental Subspaces, part 2}
 \subtitle{Computational Intelligence, Lecture 3}
 \author{by Sergei Savin}
 \centering
@@ -89,8 +89,16 @@
 \begin{frame}{Content}
 
 \begin{itemize}
-\item ***
-\item ***
+\item Projection
+\begin{itemize}
+\item How to find a projector
+\item Use case
+\end{itemize}
+\item Orthogonal compliment
+\item Column space
+\item Left null space
+\item Row space and left null space bases
+\item Example
 \item Homework
 \end{itemize}
 
@@ -297,11 +305,11 @@ All solutions to the problem $\mathbf{A} \mathbf{x}^* + \mathbf{B}_1 \mathbf{u}_
 \framesubtitle{part 3}
 \begin{flushleft}
 
-Now we need to pick one solution out of all of them, based on the criteria that it minimizes $\mathbf{u}_2$. We can solve it as an optimization (by thinking about the derivatives of the objective/cost function), but it also can be solved as a projection.
+Now we need to pick one solution out of all of them, based on the criteria that it minimizes $\mathbf{u}_2$. We can solve it as an optimization (by thinking about the derivatives of the objective/cost function), but it can also be solved as a projection.
 
 \bigskip
 
-Let us define projector $\mathbf{P} = \mathbf{B}_1 \mathbf{B}^+_1$. We can prove that $\mathbf{P} \mathbf{B}_2 \mathbf{u}^*_2 = \mathbf{0}$. Assume $\mathbf{P} \mathbf{B}_2 \mathbf{u}^*_2 = \mathbf{a}$, then $\mathbf{u}^*_2 =  \mathbf{u}^0_2 + \mathbf{u}^a_2$, where $\mathbf{u}^0_2$ is in the null space of $\mathbf{P} \mathbf{B}_2$ and $\mathbf{u}^a_2$ is in the row space of $\mathbf{P} \mathbf{B}_2$, or equivalently $\mathbf{P} \mathbf{B}_2 \mathbf{u}^0_2 = \mathbf{0}$, $(\mathbf{I} - \mathbf{P}) \mathbf{B}_2 \mathbf{u}^0_2 = \mathbf{b}$, and $\mathbf{P} \mathbf{B}_2 \mathbf{u}^a_2 = \mathbf{a}$, $(\mathbf{I} - \mathbf{P}) \mathbf{B}_2 \mathbf{u}^a_2 = \mathbf{0}$. This gives as solution:
+Let us define projector $\mathbf{P} = \mathbf{B}_1 \mathbf{B}^+_1$. We can prove that $\mathbf{P} \mathbf{B}_2 \mathbf{u}^*_2 = \mathbf{0}$. Assume $\mathbf{P} \mathbf{B}_2 \mathbf{u}^*_2 = \mathbf{a}$, then $\mathbf{u}^*_2 =  \mathbf{u}^0_2 + \mathbf{u}^a_2$, where $\mathbf{u}^0_2$ is in the null space of $\mathbf{P} \mathbf{B}_2$ and $\mathbf{u}^a_2$ is in the row space of $\mathbf{P} \mathbf{B}_2$, or equivalently $\mathbf{P} \mathbf{B}_2 \mathbf{u}^0_2 = \mathbf{0}$, $(\mathbf{I} - \mathbf{P}) \mathbf{B}_2 \mathbf{u}^0_2 = \mathbf{b}$, and $\mathbf{P} \mathbf{B}_2 \mathbf{u}^a_2 = \mathbf{a}$, $(\mathbf{I} - \mathbf{P}) \mathbf{B}_2 \mathbf{u}^a_2 = \mathbf{0}$. This gives us solution:
 
 \begin{equation}
     \mathbf{A} \mathbf{x}^* + \mathbf{B}_1 \mathbf{u}^*_1 + \mathbf{B}_2 \mathbf{u}^0_2 + \mathbf{B}_2 \mathbf{u}^a_2 = \mathbf{0}

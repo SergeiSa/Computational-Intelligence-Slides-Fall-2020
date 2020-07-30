@@ -37,6 +37,12 @@ jobs:
           root_file: main.tex
           working_directory: Slides/Linear_Algebra_Four_Fundamental_Subspaces_part2/
           
+      - name: Compile LaTeX document Linear_Algebra_Four_Fundamental_Subspaces_use_case
+        uses: xu-cheng/latex-action@master
+        with:
+          root_file: main.tex
+          working_directory: Slides/Linear_Algebra_Four_Fundamental_Subspaces_use_case/
+          
           
           
 
@@ -59,6 +65,12 @@ jobs:
           name: Linear_Algebra_Four_Fundamental_Subspaces_part2.pdf
           path: Slides/Linear_Algebra_Four_Fundamental_Subspaces_part2/main.pdf
 
+      - name: Save Linear_Algebra_Four_Fundamental_Subspaces_use_case artifact
+        uses: actions/upload-artifact@v1
+        with:
+          name: Linear_Algebra_Four_Fundamental_Subspaces_use_case.pdf
+          path: Slides/Linear_Algebra_Four_Fundamental_Subspaces_use_case/main.pdf
+
           
           
           
@@ -70,6 +82,7 @@ jobs:
           git add Slides/Introduction/main.pdf
           git add Slides/Linear_Algebra_Four_Fundamental_Subspaces/main.pdf
           git add Slides/Linear_Algebra_Four_Fundamental_Subspaces_part2/main.pdf
+          git add Slides/Linear_Algebra_Four_Fundamental_Subspaces_use_case/main.pdf
           
           git commit -m "Update compiled PDFs"
           git push

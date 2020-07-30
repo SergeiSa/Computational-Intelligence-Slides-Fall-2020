@@ -1,0 +1,251 @@
+\documentclass{beamer}
+
+ \pdfmapfile{+sansmathaccent.map}
+
+
+\mode<presentation>
+{
+  \usetheme{Warsaw} % or try Darmstadt, Madrid, Warsaw, Rochester, CambridgeUS, ...
+  \usecolortheme{crane} % or try seahorse, beaver, crane, wolverine, ...
+  \usefonttheme{serif}  % or try serif, structurebold, ...
+  \setbeamertemplate{navigation symbols}{}
+  \setbeamertemplate{caption}[numbered]
+} 
+
+\renewcommand{\familydefault}{\rmdefault}
+
+
+\hypersetup{
+    colorlinks=true,
+    linkcolor=blue,
+    filecolor=blue,      
+    urlcolor=blue,
+}
+
+\usepackage{amsmath}
+\usepackage{mathtools}
+
+\DeclareMathOperator*{\argmin}{arg\,min}
+
+\usepackage{subcaption}
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+
+
+
+\usepackage{listings}
+\usepackage{color}
+\definecolor{mygreen}{rgb}{0,0.6,0}
+\definecolor{mygray}{rgb}{0.5,0.5,0.5}
+\definecolor{mymauve}{rgb}{0.58,0,0.82}
+\lstset{ 
+  backgroundcolor=\color{white},   % choose the background color; you must add \usepackage{color} or \usepackage{xcolor}; should come as last argument
+  basicstyle=\footnotesize,        % the size of the fonts that are used for the code
+  breakatwhitespace=false,         % sets if automatic breaks should only happen at whitespace
+  breaklines=true,                 % sets automatic line breaking
+  captionpos=b,                    % sets the caption-position to bottom
+  commentstyle=\color{mygreen},    % comment style
+  deletekeywords={...},            % if you want to delete keywords from the given language
+  escapeinside={\%*}{*)},          % if you want to add LaTeX within your code
+  extendedchars=true,              % lets you use non-ASCII characters; for 8-bits encodings only, does not work with UTF-8
+  firstnumber=0000,                % start line enumeration with line 0000
+  frame=single,	                   % adds a frame around the code
+  keepspaces=true,                 % keeps spaces in text, useful for keeping indentation of code (possibly needs columns=flexible)
+  keywordstyle=\color{blue},       % keyword style
+  language=Octave,                 % the language of the code
+  morekeywords={*,...},            % if you want to add more keywords to the set
+  numbers=left,                    % where to put the line-numbers; possible values are (none, left, right)
+  numbersep=5pt,                   % how far the line-numbers are from the code
+  numberstyle=\tiny\color{mygray}, % the style that is used for the line-numbers
+  rulecolor=\color{black},         % if not set, the frame-color may be changed on line-breaks within not-black text (e.g. comments (green here))
+  showspaces=false,                % show spaces everywhere adding particular underscores; it overrides 'showstringspaces'
+  showstringspaces=false,          % underline spaces within strings only
+  showtabs=false,                  % show tabs within strings adding particular underscores
+  stepnumber=2,                    % the step between two line-numbers. If it's 1, each line will be numbered
+  stringstyle=\color{mymauve},     % string literal style
+  tabsize=2,	                   % sets default tabsize to 2 spaces
+  title=\lstname                   % show the filename of files included with \lstinputlisting; also try caption instead of title
+}
+
+
+
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+
+\title{Four Fundamental Subspaces, use cases}
+\subtitle{Computational Intelligence, Lecture 4}
+\author{by Sergei Savin}
+\centering
+\date{Fall 2020}
+
+
+
+\begin{document}
+\maketitle
+
+
+\begin{frame}{Content}
+
+\begin{itemize}
+\item Finding fixed points
+\item Checking fixed points
+\item Correcting fixed points
+\item Finding fixed points for affine systems
+\item State estimation correction
+\item Homework
+\end{itemize}
+
+\end{frame}
+
+
+
+\begin{frame}{Finding fixed points}
+% \framesubtitle{Parameter estimation}
+\begin{flushleft}
+
+Given LTI system $\dot{\mathbf{x}} = \mathbf{A} \mathbf{x} + \mathbf{B} \mathbf{u}$, where $\mathbf{x} \in \mathbb{R}^n$, $\mathbf{u} \in \mathbb{R}^m$, 1) find if there are states that can be made into fixed points, 2) find all states that can be made into fixed points with a constant control law.
+
+\bigskip
+
+Solution: 
+
+\begin{enumerate}
+    \item Yes, state $\mathbf{x} = \mathbf{0}$ becomes a fixed point under control law $\mathbf{u} = \mathbf{0}$ or $\mathbf{u} = -\mathbf{K}\mathbf{x}$
+    \item Let us find null space of the matrix $\begin{bmatrix} \mathbf{A} & \mathbf{B} \end{bmatrix}$ as $\mathbf{N} = \text{null} (\begin{bmatrix} \mathbf{A} & \mathbf{B} \end{bmatrix})$ We can find all pairs of $\mathbf{x}$ and $\mathbf{u}$ that produce fixed points as follows: $\begin{bmatrix} \mathbf{x} \\ \mathbf{u} \end{bmatrix} = \text{null} (\begin{bmatrix} \mathbf{A} & \mathbf{B} \end{bmatrix}) \mathbf{z}$, $\forall \mathbf{z}$. Let $\mathbf{N}_x$ be the first $n$ columns of $\mathbf{N}$. Then all states that can be made into fixed points are given as $\mathbf{x}^* = \mathbf{N}_x \mathbf{z}_x$, $\forall \mathbf{z}_x$
+\end{enumerate}
+
+\end{flushleft}
+\end{frame}
+
+
+\begin{frame}{Checking fixed points}
+% \framesubtitle{Parameter estimation}
+\begin{flushleft}
+
+Given LTI system $\dot{\mathbf{x}} = \mathbf{A} \mathbf{x} + \mathbf{B} \mathbf{u}$, where $\mathbf{x} \in \mathbb{R}^n$, $\mathbf{u} \in \mathbb{R}^m$, 1) check if $\mathbf{x}^*$ can be made into a fixed point, 2) find control constant $\mathbf{u}^*$ that does it, given control law $\mathbf{u} = -\mathbf{K}\mathbf{x} + \mathbf{u}^*$.
+
+\bigskip
+
+Solution: 
+
+\begin{enumerate}
+    \item We can check that $(\mathbf{A}-\mathbf{B}\mathbf{K}) \mathbf{x}^* + \mathbf{B} \mathbf{u}^* = \mathbf{0}$ has a solution, in other words that $(\mathbf{A}-\mathbf{B}\mathbf{K}) \mathbf{x}^* \in \text{col}(\mathbf{B})$. Resulting condition is: $(\mathbf{I} - \mathbf{B}\mathbf{B}^+)(\mathbf{A}-\mathbf{B}\mathbf{K})\mathbf{x}^* = \mathbf{0}$
+    \item This means finding such $\mathbf{u}^*$ that $(\mathbf{A}-\mathbf{B}\mathbf{K}) \mathbf{x}^* + \mathbf{B}\mathbf{u}^*= \mathbf{0}$. This is done via pseudo-inverse, which provides exact solution, as long as it exists: $\mathbf{u}^*= -\mathbf{B}^+(\mathbf{A}-\mathbf{B}\mathbf{K}) \mathbf{x}^*$.
+\end{enumerate}
+
+\end{flushleft}
+\end{frame}
+
+
+
+
+\begin{frame}{Correcting fixed points}
+% \framesubtitle{Parameter estimation}
+\begin{flushleft}
+
+Given LTI system $\dot{\mathbf{x}} = \mathbf{A} \mathbf{x} + \mathbf{B} \mathbf{u}$, where $\mathbf{x} \in \mathbb{R}^n$, $\mathbf{u} \in \mathbb{R}^m$, and a state $\mathbf{x}^d$ which can not be made into a fixed point under constant control law, find the closest to it state $\mathbf{x}^f$ which can be made into a fixed point.
+
+\bigskip
+
+As we know from the first example, for this LTI system all fixed points under constant control are given as $\mathbf{x}^f = \mathbf{N}_x \mathbf{z}_x$. We define shifting vector $\mathbf{x}_s = \mathbf{x}^f - \mathbf{x}^d$, and we can prove that $\mathbf{x}_s$ has to lie in the orthogonal compliment to the span of $\mathbf{N}_x$ (HW: prove it), or in other words, in its left null space.
+
+\bigskip
+
+The problem is solved by projecting $\mathbf{x}^d$ onto the left null space of $\mathbf{N}_x$: $\mathbf{x}^*_s = -(\mathbf{I} - \mathbf{N}_x\mathbf{N}^{\top}_x)\mathbf{x}^d$. We can check it by observing that $\mathbf{x}^f = \mathbf{x}^*_s + \mathbf{x}^d = \mathbf{x}^d - (\mathbf{I} - \mathbf{N}_x\mathbf{N}^{\top}_x)\mathbf{x}^d = \mathbf{N}_x\mathbf{N}^{\top}_x \mathbf{x}^d \in \text{col}(\mathbf{N}_x)$. Any other shirt vector candidate $\mathbf{x}^s = \mathbf{x}^*_s + \mathbf{a}$, where $\mathbf{a} \in \text{lnull}(\mathbf{N}_x)$ will produce $\mathbf{x}^f =  \mathbf{N}_x\mathbf{N}^{\top}_x \mathbf{x}^d + \mathbf{a} \notin \text{col}(\mathbf{N}_x)$.
+
+\end{flushleft}
+\end{frame}
+
+
+
+\begin{frame}{Finding fixed points for affine systems}
+% \framesubtitle{Parameter estimation}
+\begin{flushleft}
+
+Given LTI system $\dot{\mathbf{x}} = \mathbf{A} \mathbf{x} + \mathbf{B} \mathbf{u} + \mathbf{c}$, where $\mathbf{x} \in \mathbb{R}^n$, and control law $\mathbf{u} = -\mathbf{K}\mathbf{x} + \mathbf{u}^*$, find all states that can be made fixed points.
+
+\bigskip
+
+We are required to find all solutions to the equation $(\mathbf{A} - \mathbf{B}\mathbf{K})\mathbf{x}^* + \mathbf{B}\mathbf{u}^* + \mathbf{c} = \mathbf{0}$. Let us define state-control pairs $\mathbf{z} = \begin{bmatrix} \mathbf{x} \\ \mathbf{u} \end{bmatrix}$. 
+
+\bigskip
+
+We can easily find particular solution to this linear system: $\mathbf{z}^p = -\begin{bmatrix} (\mathbf{A} - \mathbf{B}\mathbf{K}) & \mathbf{B} \end{bmatrix}^+\mathbf{c}$. 
+
+\bigskip
+
+Finding null space basis $\mathbf{N}$ for the matrix of this linear system: $\mathbf{N} = \text{null}(\begin{bmatrix} (\mathbf{A} - \mathbf{B}\mathbf{K}) & \mathbf{B} \end{bmatrix})$ we get the general solution as follows: $\mathbf{z}^* = \mathbf{z}^p + \mathbf{N}\mathbf{y}$. First $n$ equations in this expression defining $\mathbf{z}^*$ give us $\mathbf{x}^*$, the rest - $\mathbf{u}^*$.
+
+\end{flushleft}
+\end{frame}
+
+
+\begin{frame}{State estimation correction}
+\framesubtitle{part 1}
+\begin{flushleft}
+
+Given state $\mathbf{x}$, its estimation $\mathbf{x}_e$, and three correct measurements $\mathbf{y}_1 = \mathbf{C}_1 \mathbf{x}$, $\mathbf{y}_2 = \mathbf{C}_2 \mathbf{x}$ and $\mathbf{y}_3 = \mathbf{C}_3 \mathbf{x}$, find a new better estimate of $\mathbf{x}$.
+
+\bigskip
+
+We combine all measurements into one: $\mathbf{y} = \begin{bmatrix} \mathbf{y}_1 \\ \mathbf{y}_2 \\ \mathbf{y}_3 \end{bmatrix}$, $\mathbf{C} = \begin{bmatrix} \mathbf{C}_1 \\ \mathbf{C}_2 \\ \mathbf{C}_3 \end{bmatrix}$.
+
+Next we observe that since $\mathbf{y} = \mathbf{C} \mathbf{x}$, all correct state estimates lie on the affine plane $\mathbf{x} = \mathbf{x}_p + \mathbf{N}\mathbf{z}$, where $\mathbf{x}_p = \mathbf{C}^+\mathbf{y}$ is the particular solution and $\mathbf{N} =  \text{null}(\mathbf{C})$ is the null space basis.
+
+
+\end{flushleft}
+\end{frame}
+
+
+
+
+\begin{frame}{State estimation correction}
+\framesubtitle{part 2}
+\begin{flushleft}
+
+We want to find closest to $\mathbf{x}_e$ state $\mathbf{x}^*_e$ with lies on the defined above affine plane. Defining a shift vector $\mathbf{x}_s = \mathbf{x}^*_e - \mathbf{x}_e$ we can write a condition: $\mathbf{x}_s + \mathbf{x}_e = \mathbf{x}_p + \mathbf{N}\mathbf{z}$. We can define a corrected shift vector $\mathbf{x}_c = \mathbf{x}_s - \mathbf{x}_p$, and then the problem becomes equivalent to the previously solved one: finding a state on a linear subspace, closest to the give one. 
+
+\bigskip 
+
+We remember that it is solved via projection onto the left null space: $\mathbf{x}_c = (\mathbf{I} - \mathbf{N}\mathbf{N}^{\top})\mathbf{x}_e$, hence:
+
+\begin{equation}
+    \mathbf{x}^*_e = \mathbf{N}\mathbf{N}^{\top}\mathbf{x}_e + \mathbf{x}_p
+\end{equation}
+
+
+\end{flushleft}
+\end{frame}
+
+
+
+
+\begin{frame}{Homework}
+% \framesubtitle{Parameter estimation}
+\begin{flushleft}
+
+\begin{itemize}
+    \item Prove that in the third example $\mathbf{x}^s$ has to lie in the orthogonal space to $\mathbf{N}_x$.
+\end{itemize}
+
+\end{flushleft}
+\end{frame}
+
+
+
+
+\begin{frame}
+\centerline{Lecture slides are available via Moodle.}
+\bigskip
+\centerline{You can help improve these slides at:}
+
+\centerline{\href{https://github.com/SergeiSa/Computational-Intelligence-Slides-Fall-2020}{github.com/SergeiSa/Computational-Intelligence-Slides-Fall-2020}}
+
+
+\bigskip
+\centerline{Check Moodle for additional links, videos, textbook suggestions.}
+\end{frame}
+
+\end{document}
