@@ -1,0 +1,390 @@
+\documentclass{beamer}
+
+ \pdfmapfile{+sansmathaccent.map}
+
+
+\mode<presentation>
+{
+  \usetheme{Warsaw} % or try Darmstadt, Madrid, Warsaw, Rochester, CambridgeUS, ...
+  \usecolortheme{crane} % or try seahorse, beaver, crane, wolverine, ...
+  \usefonttheme{serif}  % or try serif, structurebold, ...
+  \setbeamertemplate{navigation symbols}{}
+  \setbeamertemplate{caption}[numbered]
+} 
+
+\renewcommand{\familydefault}{\rmdefault}
+
+
+\hypersetup{
+    colorlinks=true,
+    linkcolor=blue,
+    filecolor=blue,      
+    urlcolor=blue,
+}
+
+\usepackage{amsmath}
+\usepackage{mathtools}
+
+\DeclareMathOperator*{\argmin}{arg\,min}
+
+\usepackage{subcaption}
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+
+
+
+\usepackage{listings}
+\usepackage{color}
+\definecolor{mygreen}{rgb}{0,0.6,0}
+\definecolor{mygray}{rgb}{0.5,0.5,0.5}
+\definecolor{mymauve}{rgb}{0.58,0,0.82}
+\lstset{ 
+  backgroundcolor=\color{white},   % choose the background color; you must add \usepackage{color} or \usepackage{xcolor}; should come as last argument
+  basicstyle=\footnotesize,        % the size of the fonts that are used for the code
+  breakatwhitespace=false,         % sets if automatic breaks should only happen at whitespace
+  breaklines=true,                 % sets automatic line breaking
+  captionpos=b,                    % sets the caption-position to bottom
+  commentstyle=\color{mygreen},    % comment style
+  deletekeywords={...},            % if you want to delete keywords from the given language
+  escapeinside={\%*}{*)},          % if you want to add LaTeX within your code
+  extendedchars=true,              % lets you use non-ASCII characters; for 8-bits encodings only, does not work with UTF-8
+  firstnumber=0000,                % start line enumeration with line 0000
+  frame=single,	                   % adds a frame around the code
+  keepspaces=true,                 % keeps spaces in text, useful for keeping indentation of code (possibly needs columns=flexible)
+  keywordstyle=\color{blue},       % keyword style
+  language=Octave,                 % the language of the code
+  morekeywords={*,...},            % if you want to add more keywords to the set
+  numbers=left,                    % where to put the line-numbers; possible values are (none, left, right)
+  numbersep=5pt,                   % how far the line-numbers are from the code
+  numberstyle=\tiny\color{mygray}, % the style that is used for the line-numbers
+  rulecolor=\color{black},         % if not set, the frame-color may be changed on line-breaks within not-black text (e.g. comments (green here))
+  showspaces=false,                % show spaces everywhere adding particular underscores; it overrides 'showstringspaces'
+  showstringspaces=false,          % underline spaces within strings only
+  showtabs=false,                  % show tabs within strings adding particular underscores
+  stepnumber=2,                    % the step between two line-numbers. If it's 1, each line will be numbered
+  stringstyle=\color{mymauve},     % string literal style
+  tabsize=2,	                   % sets default tabsize to 2 spaces
+  title=\lstname                   % show the filename of files included with \lstinputlisting; also try caption instead of title
+}
+
+
+
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+
+\title{Least Squares and Quadratic Programming}
+\subtitle{Computational Intelligence, Lecture 5}
+\author{by Sergei Savin}
+\centering
+\date{Fall 2020}
+
+
+
+\begin{document}
+\maketitle
+
+
+\begin{frame}{Content}
+
+\begin{itemize}
+\item Some problems with exact analytical solutions
+\item Problems with inequality constraints
+\item Quadratic programming
+\item Homework
+\end{itemize}
+
+\end{frame}
+
+
+
+\begin{frame}{Some problems with exact analytical solutions}
+% \framesubtitle{Parameter estimation}
+\begin{flushleft}
+
+Problem 1. $\text{minimize} \ ||\mathbf{x}||$. Solution $\mathbf{x} = \mathbf{0}$.
+
+\bigskip
+
+Problem 2. $\text{minimize} \ ||\mathbf{A}\mathbf{x}||$. Solution $\mathbf{x} = \mathbf{0}$.
+
+\bigskip
+
+Problem 3. $\text{minimize} \ ||\mathbf{A}\mathbf{x} + \mathbf{b}||$. 
+
+\bigskip
+
+We observe that minimum of $||\mathbf{A}\mathbf{x} + \mathbf{b}||$ coincides with the minimum of $(\mathbf{A}\mathbf{x} + \mathbf{b})^2 = (\mathbf{A}\mathbf{x} + \mathbf{b})^\top (\mathbf{A}\mathbf{x} + \mathbf{b}) = \mathbf{b}^\top\mathbf{b} + \mathbf{b}^\top\mathbf{A}\mathbf{x} + \mathbf{x}^\top\mathbf{A}^\top\mathbf{b} + \mathbf{x}^\top\mathbf{A}^\top\mathbf{A}\mathbf{x}$, whose minimum coincides with the minimum of $\mathbf{b}^\top\mathbf{A}\mathbf{x} + \mathbf{x}^\top\mathbf{A}^\top\mathbf{b} + \mathbf{x}^\top\mathbf{A}^\top\mathbf{A}\mathbf{x}$. Since $\mathbf{b}^\top\mathbf{A}\mathbf{x}$ is a scalar, it is equal to its own transpose $(\mathbf{b}^\top\mathbf{A}\mathbf{x})^\top = \mathbf{x}^\top\mathbf{A}^\top\mathbf{b}$.
+
+Taking derivative with respect to $\mathbf{x}$ we find gradient of the obtained \emph{cost function}, and set it to zero, since that is the condition for the extreme point:
+
+\begin{equation}
+    \frac{\partial}{\partial \mathbf{x}} (2\mathbf{b}^\top\mathbf{A}\mathbf{x} + \mathbf{x}^\top\mathbf{A}^\top\mathbf{A}\mathbf{x}) = 2\mathbf{b}^\top\mathbf{A} + 2\mathbf{x}^\top\mathbf{A}^\top\mathbf{A} = \mathbf{0}
+\end{equation}
+ 
+\end{flushleft}
+\end{frame}
+
+\begin{frame}{Some problems with exact analytical solutions}
+\framesubtitle{Part 2}
+\begin{flushleft}
+
+Thus we get expression: $2\mathbf{x}^\top\mathbf{A}^\top\mathbf{A} = -2\mathbf{b}^\top\mathbf{A}$, which we transpose and find value of $\mathbf{x}$:
+
+\begin{equation} \label{pinv}
+\mathbf{x} = -(\mathbf{A}^\top\mathbf{A})^{-1}\mathbf{A}^\top\mathbf{b}
+\end{equation}
+
+The shorthand for this formula is $\mathbf{x} = -\mathbf{A}^+\mathbf{b}$, and it is called Moore-Penrose pseudoinverse.
+
+\bigskip
+
+Remember that a projector is often defined as $\mathbf{P} = \mathbf{A}\mathbf{A}^+$. Now we can provide an explicit formula for a projector:
+
+\begin{equation} \label{projector}
+\mathbf{P} = \mathbf{A}(\mathbf{A}^\top\mathbf{A})^{-1}\mathbf{A}^\top
+\end{equation}
+
+However, neither \eqref{pinv} not \eqref{projector} should be directly used in as algorithms, since usually there are better ways to compute those quantities (via SVD decomposition, for example).
+
+\end{flushleft}
+\end{frame}
+
+
+
+
+
+\begin{frame}{Some problems with exact analytical solutions}
+\framesubtitle{Part 3}
+\begin{flushleft}
+
+Problem 4. 
+%
+\begin{equation}
+\begin{aligned}
+& \underset{\mathbf{x}}{\text{minimize}}
+& & || \mathbf{x} ||, \\
+& \text{subject to}
+& & \mathbf{A} \mathbf{x} + \mathbf{B} \mathbf{y} = \mathbf{c}.
+\end{aligned}
+\end{equation}
+
+We already solved this problem before, during lecture 2, using projection. Solution is: $\mathbf{x} = -((\mathbf{I} - \mathbf{B}\mathbf{B}^+) \mathbf{A})^+(\mathbf{I} - \mathbf{B}\mathbf{B}^+) \mathbf{c}$.
+
+\bigskip
+
+Problem 5. 
+%
+\begin{equation}
+\begin{aligned}
+& \underset{\mathbf{x}}{\text{minimize}}
+& & || \mathbf{x} ||, \\
+& \text{subject to}
+& & \mathbf{A} \mathbf{x} = \mathbf{c}.
+\end{aligned}
+\end{equation}
+
+We can treat is as a special case of the previous problem, where $\mathbf{B} = \mathbf{0}$, hence $(\mathbf{I} - \mathbf{B}\mathbf{B}^+) = \mathbf{I}$, and the solution is: $\mathbf{x} = -\mathbf{A}^+\mathbf{c}$.
+
+\bigskip
+
+Notice that solution for the problem 5 and problem 3 are written identically, even though problem 3 asks us to minimize residual of the linear system, while problem 5 - find minimum norm solution.
+
+\end{flushleft}
+\end{frame}
+
+
+
+
+
+\begin{frame}{Some problems with exact analytical solutions}
+\framesubtitle{Part 4}
+\begin{flushleft}
+
+Problem 6. 
+%
+\begin{equation}
+\begin{aligned}
+& \underset{\mathbf{x}}{\text{minimize}}
+& & || \mathbf{D}\mathbf{x} ||, \\
+& \text{subject to}
+& & \mathbf{A} \mathbf{x} = \mathbf{b}.
+\end{aligned}
+\end{equation}
+
+One way to think about it is to first find all solution to the constraint equation $\mathbf{A} \mathbf{x} = \mathbf{b}$ and then find optimal one among them. As we know, all solutions are given as: $\mathbf{x} = \mathbf{A}^+\mathbf{b} + \mathbf{N}\mathbf{z}$, where $\mathbf{N} = \text{null}(\mathbf{A})$. Then our cost function becomes: $|| \mathbf{D}\mathbf{A}^+\mathbf{b} +  \mathbf{D}\mathbf{N}\mathbf{z} ||$, which is equivalent to the problem 3. Thus, we can write solution as: $\mathbf{z}^* = -(\mathbf{D}\mathbf{N})^+ \mathbf{D}\mathbf{A}^+\mathbf{b}$. In terms of $\mathbf{x}$ solution is:
+
+\begin{equation}
+    \mathbf{x}^* = \mathbf{A}^+\mathbf{b}-\mathbf{N}(\mathbf{D}\mathbf{N})^+ \mathbf{D}\mathbf{A}^+\mathbf{b}
+\end{equation}
+
+\end{flushleft}
+\end{frame}
+
+
+
+\begin{frame}{Some problems with exact analytical solutions}
+\framesubtitle{Part 5}
+\begin{flushleft}
+
+Problem 7. 
+%
+\begin{equation}
+\begin{aligned}
+& \underset{\mathbf{x}}{\text{minimize}}
+& & || \mathbf{D}\mathbf{x} + \mathbf{f} ||, \\
+& \text{subject to}
+& & \mathbf{A} \mathbf{x} = \mathbf{b}.
+\end{aligned}
+\end{equation}
+
+After the same initial step, we arrive at the cost function $|| \mathbf{D}\mathbf{N}\mathbf{z} + \mathbf{D}\mathbf{A}^+\mathbf{b} + \mathbf{f}||$. It is only different in the constant term, and the solution is found as follows:
+
+
+\begin{equation}
+    \mathbf{z}^* = -(\mathbf{D}\mathbf{N})^+ (\mathbf{D}\mathbf{A}^+\mathbf{b} + \mathbf{f})
+\end{equation}
+\begin{equation}
+    \mathbf{x}^* = \mathbf{A}^+\mathbf{b}-\mathbf{N}(\mathbf{D}\mathbf{N})^+ (\mathbf{D}\mathbf{A}^+\mathbf{b} + \mathbf{f})
+\end{equation}
+
+
+\end{flushleft}
+\end{frame}
+
+
+
+\begin{frame}{Some problems with exact analytical solutions}
+\framesubtitle{Part 6}
+\begin{flushleft}
+
+Problem 8. 
+%
+\begin{equation}
+\begin{aligned}
+& \underset{\mathbf{x}}{\text{minimize}}
+& & \mathbf{x}^\top \mathbf{H} \mathbf{x} + \mathbf{c}^\top\mathbf{x}, \\
+& \text{subject to}
+& & \mathbf{A} \mathbf{x} = \mathbf{b}.
+\end{aligned}
+\end{equation}
+
+where $\mathbf{H}$ is positive-definite.
+
+\bigskip
+
+Assume that we found a decomposition $\mathbf{H} = \mathbf{D}^\top\mathbf{D}$. We can also find such $\mathbf{f}$ that $2\mathbf{f}^\top\mathbf{D} = \mathbf{c}^\top$. Then our cost function becomes $\mathbf{x}^\top \mathbf{D}^\top\mathbf{D} \mathbf{x} + 2\mathbf{f}^\top\mathbf{D}\mathbf{x}$, which as we saw before has coinciding minimum with the cost function $||\mathbf{D}\mathbf{x} + \mathbf{f}||$.
+
+\bigskip
+
+Therefore the problem has the same solution as Problem 6, after the mentioned above change in constants.
+
+\end{flushleft}
+\end{frame}
+
+
+
+
+\begin{frame}{Problems with inequality constraints}
+% \framesubtitle{Part 1}
+\begin{flushleft}
+
+Problem 9. 
+%
+\begin{equation}
+\begin{aligned}
+& \underset{\mathbf{x}}{\text{minimize}}
+& & || \mathbf{D}\mathbf{x} + \mathbf{f} ||, \\
+& \text{subject to}
+& & \mathbf{x} \leq \mathbf{b}.
+\end{aligned}
+\end{equation}
+
+Problem 10. 
+%
+\begin{equation}
+\begin{aligned}
+& \underset{\mathbf{x}}{\text{minimize}}
+& & || \mathbf{x} ||, \\
+& \text{subject to}
+& & \mathbf{A}\mathbf{x} \leq \mathbf{b}.
+\end{aligned}
+\end{equation}
+
+Problem 11. 
+%
+\begin{equation}
+\begin{aligned}
+& \underset{\mathbf{x}}{\text{minimize}}
+& & || \mathbf{D}\mathbf{x} + \mathbf{f} ||, \\
+& \text{subject to}
+& & \begin{cases}
+    \mathbf{A}\mathbf{x} \leq \mathbf{b}, \\
+    \mathbf{C}\mathbf{x} = \mathbf{d}.
+    \end{cases}
+\end{aligned}
+\end{equation}
+
+\end{flushleft}
+\end{frame}
+
+
+
+\begin{frame}{Quadratic programming}
+% \framesubtitle{Part 1}
+\begin{flushleft}
+
+Mentioned problems can be described together as quadratic programs. The name is due to the cost function being quadratic (or equivalent). They are allowed to have linear equality or inequality constraints. 
+
+\bigskip
+
+General form of a quadratic program is given below:
+
+%
+\begin{equation}
+\begin{aligned}
+& \underset{\mathbf{x}}{\text{minimize}}
+& & \mathbf{x}^\top \mathbf{H} \mathbf{x} + \mathbf{f}^\top\mathbf{x}, \\
+& \text{subject to}
+& & \begin{cases}
+    \mathbf{A}\mathbf{x} \leq \mathbf{b}, \\
+    \mathbf{C}\mathbf{x} = \mathbf{d}.
+    \end{cases}
+\end{aligned}
+\end{equation}
+
+where $\mathbf{H}$ is positive-definite and $\mathbf{A}\mathbf{x} \leq \mathbf{b}$ describe a \emph{convex region}.
+
+\end{flushleft}
+\end{frame}
+
+
+
+\begin{frame}{Homework}
+% \framesubtitle{Parameter estimation}
+\begin{flushleft}
+
+\begin{itemize}
+    \item Solve all examples of problems with and without inequalities using \texttt{quadprog} function in the language of your choice.
+\end{itemize}
+
+\end{flushleft}
+\end{frame}
+
+
+
+
+\begin{frame}
+\centerline{Lecture slides are available via Moodle.}
+\bigskip
+\centerline{You can help improve these slides at:}
+
+\centerline{\href{https://github.com/SergeiSa/Computational-Intelligence-Slides-Fall-2020}{github.com/SergeiSa/Computational-Intelligence-Slides-Fall-2020}}
+
+
+\bigskip
+\centerline{Check Moodle for additional links, videos, textbook suggestions.}
+\end{frame}
+
+\end{document}

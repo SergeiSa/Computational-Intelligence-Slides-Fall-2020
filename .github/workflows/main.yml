@@ -43,6 +43,12 @@ jobs:
           root_file: main.tex
           working_directory: Slides/Linear_Algebra_Four_Fundamental_Subspaces_use_case/
           
+      - name: Compile LaTeX document Least_Squares_and_Quadratic_Programming
+        uses: xu-cheng/latex-action@master
+        with:
+          root_file: main.tex
+          working_directory: Slides/Least_Squares_and_Quadratic_Programming/
+          
           
           
 
@@ -71,6 +77,12 @@ jobs:
           name: Linear_Algebra_Four_Fundamental_Subspaces_use_case.pdf
           path: Slides/Linear_Algebra_Four_Fundamental_Subspaces_use_case/main.pdf
 
+      - name: Save Least_Squares_and_Quadratic_Programming artifact
+        uses: actions/upload-artifact@v1
+        with:
+          name: Least_Squares_and_Quadratic_Programming.pdf
+          path: Slides/Least_Squares_and_Quadratic_Programming/main.pdf
+
           
           
           
@@ -83,6 +95,7 @@ jobs:
           git add Slides/Linear_Algebra_Four_Fundamental_Subspaces/main.pdf
           git add Slides/Linear_Algebra_Four_Fundamental_Subspaces_part2/main.pdf
           git add Slides/Linear_Algebra_Four_Fundamental_Subspaces_use_case/main.pdf
+          git add Slides/Least_Squares_and_Quadratic_Programming/main.pdf
           
           git commit -m "Update compiled PDFs"
           git push
