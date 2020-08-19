@@ -3,6 +3,10 @@
 * Lecture 2 - https://github.com/SergeiSa/Computational-Intelligence-Slides-Fall-2020/tree/master/Slides/Linear_Algebra_Four_Fundamental_Subspaces
 * Lecture 3 - https://github.com/SergeiSa/Computational-Intelligence-Slides-Fall-2020/tree/master/Slides/Linear_Algebra_Four_Fundamental_Subspaces_part2
 * Lecture 4 - https://github.com/SergeiSa/Computational-Intelligence-Slides-Fall-2020/tree/master/Slides/Linear_Algebra_Four_Fundamental_Subspaces_use_case
+* Lecture 5 - https://github.com/SergeiSa/Computational-Intelligence-Slides-Fall-2020/tree/master/Slides/Least_Squares_and_Quadratic_Programming
+
+# Videos:
+* Lecture 1: [part 1](https://youtu.be/56ZVzQcCdQk), [part 2](https://youtu.be/VwmmfpipHTc)
 
 # For contributors:
 
