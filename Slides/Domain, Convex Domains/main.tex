@@ -1,0 +1,426 @@
+\documentclass{beamer}
+
+ \pdfmapfile{+sansmathaccent.map}
+
+
+\mode<presentation>
+{
+  \usetheme{Warsaw} % or try Darmstadt, Madrid, Warsaw, Rochester, CambridgeUS, ...
+  \usecolortheme{crane} % or try seahorse, beaver, crane, wolverine, ...
+  \usefonttheme{serif}  % or try serif, structurebold, ...
+  \setbeamertemplate{navigation symbols}{}
+  \setbeamertemplate{caption}[numbered]
+} 
+
+\renewcommand{\familydefault}{\rmdefault}
+
+
+\hypersetup{
+    colorlinks=true,
+    linkcolor=blue,
+    filecolor=blue,      
+    urlcolor=blue,
+}
+
+\usepackage{amsmath}
+\usepackage{mathtools}
+
+\DeclareMathOperator*{\argmin}{arg\,min}
+
+\usepackage{subcaption}
+
+\usepackage{tikz}
+\tikzset{every picture/.style={line width=0.75pt}} %set default line width to 0.75pt        
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+
+
+
+\usepackage{listings}
+\usepackage{color}
+\definecolor{mygreen}{rgb}{0,0.6,0}
+\definecolor{mygray}{rgb}{0.5,0.5,0.5}
+\definecolor{mymauve}{rgb}{0.58,0,0.82}
+\lstset{ 
+  backgroundcolor=\color{white},   % choose the background color; you must add \usepackage{color} or \usepackage{xcolor}; should come as last argument
+  basicstyle=\footnotesize,        % the size of the fonts that are used for the code
+  breakatwhitespace=false,         % sets if automatic breaks should only happen at whitespace
+  breaklines=true,                 % sets automatic line breaking
+  captionpos=b,                    % sets the caption-position to bottom
+  commentstyle=\color{mygreen},    % comment style
+  deletekeywords={...},            % if you want to delete keywords from the given language
+  escapeinside={\%*}{*)},          % if you want to add LaTeX within your code
+  extendedchars=true,              % lets you use non-ASCII characters; for 8-bits encodings only, does not work with UTF-8
+  firstnumber=0000,                % start line enumeration with line 0000
+  frame=single,	                   % adds a frame around the code
+  keepspaces=true,                 % keeps spaces in text, useful for keeping indentation of code (possibly needs columns=flexible)
+  keywordstyle=\color{blue},       % keyword style
+  language=Octave,                 % the language of the code
+  morekeywords={*,...},            % if you want to add more keywords to the set
+  numbers=left,                    % where to put the line-numbers; possible values are (none, left, right)
+  numbersep=5pt,                   % how far the line-numbers are from the code
+  numberstyle=\tiny\color{mygray}, % the style that is used for the line-numbers
+  rulecolor=\color{black},         % if not set, the frame-color may be changed on line-breaks within not-black text (e.g. comments (green here))
+  showspaces=false,                % show spaces everywhere adding particular underscores; it overrides 'showstringspaces'
+  showstringspaces=false,          % underline spaces within strings only
+  showtabs=false,                  % show tabs within strings adding particular underscores
+  stepnumber=2,                    % the step between two line-numbers. If it's 1, each line will be numbered
+  stringstyle=\color{mymauve},     % string literal style
+  tabsize=2,	                   % sets default tabsize to 2 spaces
+  title=\lstname                   % show the filename of files included with \lstinputlisting; also try caption instead of title
+}
+
+
+
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+
+\title{Domain, Convex Domains}
+\subtitle{Computational Intelligence, Lecture 6}
+\author{by Sergei Savin}
+\centering
+\date{Fall 2020}
+
+
+
+\begin{document}
+\maketitle
+
+
+\begin{frame}{Content}
+
+\begin{itemize}
+\item Domain
+\item Bounded and unbounded domains
+\item Convex domains
+\item Examples of convex domains
+\item Examples of non-convex domains
+\item Convex functions
+\item Convex functions - examples
+\item Convex programming
+\item Homework
+\end{itemize}
+
+\end{frame}
+
+
+
+\begin{frame}{Domain}
+% \framesubtitle{Parameter estimation}
+\begin{flushleft}
+
+Problem 1. Find minimum of the function $f = x^2 + 2y^2$ if $x \in \mathbb{R}$ and $y \in \mathbb{R}$. Solution is $x = 0$, $y = 0$.
+
+\bigskip
+
+Problem 2. Find minimum of the function $f = x^2 + 2y^2$ if $x \in [1 \ 2]$ and $y \in [2 \ 5]$. Solution is $x = 1$, $y = 2$.
+
+\bigskip
+
+Note that solutions of problems 1 and 2 are different, and this is only due to the difference of the allowed values that the \emph{decision variables} $x$ and $y$ can assume.
+
+\begin{block}{Definition 1}
+Space of all allowed values that decision variables can assume is called \emph{domain} of the optimization problem.
+\end{block}
+ 
+\end{flushleft}
+\end{frame}
+
+
+
+\begin{frame}{Bounded and unbounded domains}
+\framesubtitle{Part 1}
+\begin{flushleft}
+
+Problem 3. Find minimum of the function $f = -x^2$ if $x \in [-3 \ 2]$. Solution is $x = -3$.
+
+\bigskip
+
+Problem 4. Find minimum of the function $f = -x^2$ if $x \in \mathbb{R}$. The problem has no solution.
+
+\bigskip
+
+Problem 5. Find minimum of the function $f = -x^2$ if $x \in  [-\infty \ 2]$. The problem has no solution.
+
+\bigskip
+
+The major difference between domains of the problems 2, 3 vs problems 1, 4 and 5 is that the later are \emph{not bound} (i.e., you can construct a sequence of the values in the domain that would approach infinity).
+
+\bigskip
+
+We can see that in the case of problems 3-5, bounding the domain allows the problem to obtain a solution.
+ 
+\end{flushleft}
+\end{frame}
+
+
+
+\begin{frame}{Bounded and unbounded domains}
+\framesubtitle{Part 2}
+\begin{flushleft}
+
+Problem 6. Find maximum of the function $f = x^2$ if $1 <=x < 2$. It has no solution.
+
+\bigskip
+
+Problem 7. Find minimum of the function $f = x^2$ if $1 <=x < 2$. Solution is $x = 1$.
+
+\bigskip
+
+This time, the fact that the one of the \emph{boundaries} of the domain were not included lead problem 6 to have no solution, while problem 7 had one. For problem 6 we can pick a value arbitrary close to $x = 2$, approaching it from the left, but for any pick of the decision variable we can make, there always will be other values of the decision variable closer to $x = 2$ and hence producing larger values of $f$.
+ 
+\end{flushleft}
+\end{frame}
+
+
+\begin{frame}{Convex domains}
+% \framesubtitle{Parameter estimation}
+\begin{flushleft}
+
+\begin{block}{Definition 2}
+Domain is \emph{convex} iff for any two points in the domain, the line segment connecting them is also in the domain.
+\end{block}
+
+\bigskip
+
+\begin{figure}
+\centering
+\begin{minipage}{.3\textwidth}
+  \centering
+  
+\textit{  
+\begin{tikzpicture}[x=0.75pt,y=0.75pt,yscale=-1,xscale=1]
+\draw  [fill={rgb, 255:red, 248; green, 197; blue, 28 }  ,fill opacity=1 ] (148,55) -- (188,62.5) -- (211,107.5) -- (175,170.5) -- (94,158.5) -- (98,85) -- cycle ;
+\end{tikzpicture}}
+
+  \captionof{figure}{Convex domain}
+\end{minipage}%
+\begin{minipage}{.7\textwidth}
+  \centering
+
+\begin{tikzpicture}[x=0.75pt,y=0.75pt,yscale=-1,xscale=1]
+\draw  [fill={rgb, 255:red, 248; green, 197; blue, 28 }  ,fill opacity=1 ] (525,68.5) -- (525,112.5) -- (452,97.5) -- (435,120.5) -- (533,188.5) -- (488,204.5) -- (411,187.5) -- (404,72.5) -- cycle ;
+\draw [color={rgb, 255:red, 208; green, 2; blue, 27 }  ,draw opacity=1, line width=1.75pt ]   (501,88.5) -- (486.03,126.12) -- (464,181.5) ;
+\end{tikzpicture}
+
+  \captionof{figure}{Non-convex domain}
+\end{minipage}
+\end{figure}
+ 
+\end{flushleft}
+\end{frame}
+
+
+
+
+
+\begin{frame}{Examples of convex domains}
+% \framesubtitle{Parameter estimation}
+\begin{flushleft}
+
+$\mathbf{x} \in \mathcal{X}$, $\mathcal{X} = \mathbb{R}^n$  is convex. Prove it.
+
+\bigskip
+
+$\mathbf{x} \in \mathcal{X}$, $\mathcal{X} = \{ \mathbf{x} \in \mathbb{R}^n: \ \mathbf{x} \leq \mathbf{h} \}$ is convex. Prove it.
+
+\bigskip
+
+$\mathbf{x} \in \mathcal{X}$, $\mathcal{X} = \{ \mathbf{x} \in \mathbb{R}^2: \ x_1^2+x_2^2 \leq h^2 \}$ is convex. Prove it.
+
+\bigskip
+
+$\mathbf{x} \in \mathcal{X}$, $\mathcal{X} = \{ \mathbf{x} \in \mathbb{R}^n: \ \mathbf{x}^\top \mathbf{H} \mathbf{x} \leq h \}$, where $\mathbf{H} \succ 0$ is positive-definite symmetric matrix is convex. Prove it.
+
+\bigskip
+
+In the proofs it is convenient to remember that for any two points $\mathbf{x}_1$ and $\mathbf{x}_2$, all points in the line segment connecting them are given as $\mathbf{x}_l = \alpha \mathbf{x}_1 + (1 - \alpha) \mathbf{x}_2$, where $\alpha \in [0 \ 1]$. This is called \emph{convex combination}.
+ 
+\end{flushleft}
+\end{frame}
+
+
+\begin{frame}{Examples of non-convex domains}
+% \framesubtitle{Parameter estimation}
+\begin{flushleft}
+
+$\mathbf{x} \in \mathcal{X}$, $\mathcal{X} = \{ \mathbf{x} \in \mathbb{R}^n: \ \mathbf{x} \geq \mathbf{h} \}$ is not convex. Prove it.
+
+\bigskip
+
+$x \in \mathcal{X}$, $\mathcal{X} = [-1 \ 2] \cup [3 \ 7]$ is not convex. Prove it.
+
+\bigskip
+
+$\mathbf{x} \in \mathcal{X}$, $\mathcal{X} = \{ \mathbf{x} \in \mathbb{R}^2: \ x_1^2+x_2^2 \geq h^2 \}$ is not convex. Prove it.
+
+\bigskip
+
+$\mathbf{x} \in \mathcal{X}$, $\mathcal{X} = \{ \mathbf{x} \in \mathbb{R}^n: \ \mathbf{x}^\top \mathbf{H} \mathbf{x} \geq h \}$, where $\mathbf{H}$ is positive-definite symmetric matrix is not convex. Prove it.
+
+\bigskip
+
+These proves simply require one counter-example to show that the defining property of convex domains does not hold.
+ 
+\end{flushleft}
+\end{frame}
+
+
+
+
+\begin{frame}{Convex functions}
+% \framesubtitle{Parameter estimation}
+\begin{flushleft}
+
+\begin{block}{Definition 3}
+Function $f(\mathbf{x})$ defined on a domain $\mathcal{D}$, for which it holds that $\forall \mathbf{x}_1, \mathbf{x}_2 \in \mathcal{D}$, $f(\alpha \mathbf{x}_1 + (1 - \alpha) \mathbf{x}_2) \leq \alpha f(\mathbf{x}_1) + (1 - \alpha) f(\mathbf{x}_2)$ is called \emph{a convex function}.
+\end{block}
+
+\bigskip
+
+\begin{figure}
+\centering
+\begin{minipage}{.4\textwidth}
+  \centering
+  
+\begin{tikzpicture}[x=0.75pt,y=0.75pt,yscale=-1,xscale=1]
+\draw  [draw opacity=0, line width=1.0pt] (696.23,142.36) .. controls (681.43,167.71) and (649.5,185.54) .. (612.24,186.11) .. controls (573.51,186.7) and (539.97,168.5) .. (525.19,141.99) -- (611.08,111.08) -- cycle ; \draw   (696.23,142.36) .. controls (681.43,167.71) and (649.5,185.54) .. (612.24,186.11) .. controls (573.51,186.7) and (539.97,168.5) .. (525.19,141.99) ;
+\draw [color={rgb, 255:red, 208; green, 2; blue, 27 }  ,draw opacity=1, line width=1.75pt]   (680,161.5) -- (560,173.5) ;
+
+\draw [color={rgb, 255:red, 208; green, 2; blue, 27 }  ,draw opacity=1 ]   (680,161.5) -- (560,173.5) ;
+%Shape: Circle [id:dp3160827101885906] 
+\draw  [fill={rgb, 255:red, 0; green, 0; blue, 0 }  ,fill opacity=1 ] (554.5,173.5) .. controls (554.5,170.46) and (556.96,168) .. (560,168) .. controls (563.04,168) and (565.5,170.46) .. (565.5,173.5) .. controls (565.5,176.54) and (563.04,179) .. (560,179) .. controls (556.96,179) and (554.5,176.54) .. (554.5,173.5) -- cycle ;
+%Shape: Circle [id:dp16415395117171228] 
+\draw  [fill={rgb, 255:red, 0; green, 0; blue, 0 }  ,fill opacity=1 ] (674.5,161.5) .. controls (674.5,158.46) and (676.96,156) .. (680,156) .. controls (683.04,156) and (685.5,158.46) .. (685.5,161.5) .. controls (685.5,164.54) and (683.04,167) .. (680,167) .. controls (676.96,167) and (674.5,164.54) .. (674.5,161.5) -- cycle ;
+
+\draw (560,185) node [anchor=north west][inner sep=0.75pt]   [align=left] {$\mathbf{x_1}$};
+\draw (675,170) node [anchor=north west][inner sep=0.75pt]   [align=left] {$\mathbf{x_2}$};
+\end{tikzpicture}
+
+  \captionof{figure}{Convex function}
+\end{minipage}%
+\begin{minipage}{.7\textwidth}
+  \centering
+
+ \begin{tikzpicture}[x=0.75pt,y=0.75pt,yscale=-1,xscale=1]
+%uncomment if require: \path (0,300); %set diagram left start at 0, and has height of 300
+
+%Straight Lines [id:da6875192047258083] 
+\draw [color={rgb, 255:red, 208; green, 2; blue, 27 }  ,draw opacity=1, line width=1.75pt]   (564.6,165.5) -- (444.6,177.5) ;
+%Shape: Circle [id:dp14324656781298462] 
+\draw  [fill={rgb, 255:red, 0; green, 0; blue, 0 }  ,fill opacity=1 ] (439.1,177.5) .. controls (439.1,174.46) and (441.56,172) .. (444.6,172) .. controls (447.64,172) and (450.1,174.46) .. (450.1,177.5) .. controls (450.1,180.54) and (447.64,183) .. (444.6,183) .. controls (441.56,183) and (439.1,180.54) .. (439.1,177.5) -- cycle ;
+%Shape: Circle [id:dp2582069443071713] 
+\draw  [fill={rgb, 255:red, 0; green, 0; blue, 0 }  ,fill opacity=1 ] (559.1,165.5) .. controls (559.1,162.46) and (561.56,160) .. (564.6,160) .. controls (567.64,160) and (570.1,162.46) .. (570.1,165.5) .. controls (570.1,168.54) and (567.64,171) .. (564.6,171) .. controls (561.56,171) and (559.1,168.54) .. (559.1,165.5) -- cycle ;
+%Curve Lines [id:da47039197462224447] 
+\draw    (498.2,186.8) .. controls (512.6,148) and (529.4,88) .. (547.4,128) ;
+%Curve Lines [id:da13389450894014865] 
+\draw    (399,161.2) .. controls (439,131.2) and (470.6,244.8) .. (498.2,186.8) ;
+%Curve Lines [id:da2313253314744761] 
+\draw    (547.4,128) .. controls (563.8,173.6) and (577.4,192) .. (617.4,162) ;
+
+\draw (440,190) node [anchor=north west][inner sep=0.75pt]   [align=left] {$\mathbf{x_1}$};
+\draw (560,180) node [anchor=north west][inner sep=0.75pt]   [align=left] {$\mathbf{x_2}$};
+\end{tikzpicture}
+
+  \captionof{figure}{Non-convex function}
+\end{minipage}
+\end{figure}
+ 
+ 
+\end{flushleft}
+\end{frame}
+
+
+
+\begin{frame}{Convex functions - examples}
+% \framesubtitle{Part 3}
+\begin{flushleft}
+
+Here are some single-variable convex functions: 
+
+\begin{itemize}
+    \item $f(x) = 1$
+    \item $f(x) = x$, $f(x) = x + 1$, $f(x) = 6x + 3$
+    \item $f(x) = x^2$, $f(x) = (x - 5)^2$, $f(x) = (x + 1)^2 - 10$
+    \item $f(x) = x^3$, if $x > 0$
+\end{itemize}
+
+\bigskip
+
+Here are some multi-variable convex functions: 
+
+\begin{itemize}
+    \item $f(\mathbf{x}) = \mathbf{A}\mathbf{x} + \mathbf{b}$
+    \item $f(\mathbf{x}) = \mathbf{x}^\top \mathbf{H}\mathbf{x}$, $\mathbf{H} \succ 0$ 
+\end{itemize}
+
+\end{flushleft}
+\end{frame}
+
+
+
+\begin{frame}{Convex programming}
+% \framesubtitle{Part 3}
+\begin{flushleft}
+
+\begin{block}{Definition 3}
+If the domain of the optimization problem is convex and the cost function is convex, it is called a \emph{convex optimization problem}.
+\end{block}
+
+\bigskip
+
+Additionally, we will always assume that the domain of the convex optimization problem contains its boundary. Also, without the loss of generality, we will consider only minimization problems.
+
+\bigskip
+
+There are a few important properties of convex optimization problems (with our additional assumption):
+
+\begin{itemize}
+    \item If the domain is non-empty, there is a solution.
+    \item The problem has no local minima. We can find a path from any point to the solution, along which the cost function will not increase.
+\end{itemize}
+
+\end{flushleft}
+\end{frame}
+
+
+
+\begin{frame}{Homework}
+% \framesubtitle{Parameter estimation}
+\begin{flushleft}
+
+\begin{itemize}
+    \item Make formal proofs asked for in this lecture.
+\end{itemize}
+
+\end{flushleft}
+\end{frame}
+
+
+\begin{frame}{Self-study}
+% \framesubtitle{Part 3}
+\begin{flushleft}
+
+\begin{itemize}
+    \item \href{https://www.youtube.com/watch?v=kcOodzDGV4c}{Convex Optimization, lecture 3, S. Boyd. Stanford. Convex functions}.
+\end{itemize}
+
+\end{flushleft}
+\end{frame}
+
+
+
+\begin{frame}
+\centerline{Lecture slides are available via Moodle.}
+\bigskip
+\centerline{You can help improve these slides at:}
+
+\centerline{\href{https://github.com/SergeiSa/Computational-Intelligence-Slides-Fall-2020}{github.com/SergeiSa/Computational-Intelligence-Slides-Fall-2020}}
+
+
+\bigskip
+\centerline{Check Moodle for additional links, videos, textbook suggestions.}
+\end{frame}
+
+\end{document}
