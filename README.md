@@ -7,6 +7,15 @@
 
 # Videos:
 * Lecture 1: [part 1](https://youtu.be/56ZVzQcCdQk), [part 2](https://youtu.be/VwmmfpipHTc)
+* Lecture 2: [part 1](https://youtu.be/wc3UT7IZs98), [part 2](https://youtu.be/4iA4CFzyELg), [part 3](https://youtu.be/EdrsJ-l9VLs)
+
+# Reference material
+
+## Textbooks:
+* Boyd, S., Boyd, S.P. and Vandenberghe, L., 2004. Convex optimization. Cambridge university press. https://web.stanford.edu/~boyd/cvxbook/bv_cvxbook.pdf
+* Kevin M.. Lynch and Park, F.C., 2017. Modern Robotics: Mechanics, Planning, and Control. Cambridge University Press. http://hades.mech.northwestern.edu/images/7/7f/MR.pdf
+* Siciliano, B., Sciavicco L. Villani L. & Oriolo G.,(2009) Robotic–Modelling, Planning and Control. https://www.academia.edu/23785978/B_Sicilliano_Robotics_Modelling_Planning_and_Control
+
 
 # For contributors:
 
