@@ -4,6 +4,8 @@
 * Lecture 3 - https://github.com/SergeiSa/Computational-Intelligence-Slides-Fall-2020/tree/master/Slides/Linear_Algebra_Four_Fundamental_Subspaces_part2
 * Lecture 4 - https://github.com/SergeiSa/Computational-Intelligence-Slides-Fall-2020/tree/master/Slides/Linear_Algebra_Four_Fundamental_Subspaces_use_case
 * Lecture 5 - https://github.com/SergeiSa/Computational-Intelligence-Slides-Fall-2020/tree/master/Slides/Least_Squares_and_Quadratic_Programming
+* Lecture 6 - https://github.com/SergeiSa/Computational-Intelligence-Slides-Fall-2020/tree/master/Slides/Domain_Convex_Domains
+* Lecture 7 - https://github.com/SergeiSa/Computational-Intelligence-Slides-Fall-2020/tree/master/Slides/Linear_inequality_representation_of_convex_domains
 
 # Videos:
 * Lecture 1: [part 1](https://youtu.be/56ZVzQcCdQk), [part 2](https://youtu.be/VwmmfpipHTc)
