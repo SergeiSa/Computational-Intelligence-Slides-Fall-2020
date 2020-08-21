@@ -16,6 +16,10 @@
 * Kevin M.. Lynch and Park, F.C., 2017. Modern Robotics: Mechanics, Planning, and Control. Cambridge University Press. http://hades.mech.northwestern.edu/images/7/7f/MR.pdf
 * Siciliano, B., Sciavicco L. Villani L. & Oriolo G.,(2009) Robotic–Modelling, Planning and Control. https://www.academia.edu/23785978/B_Sicilliano_Robotics_Modelling_Planning_and_Control
 
+## References for lectures:
+* Lecture 2, 3: 
+** [3Blue1Brown: Inverse matrices, column space and null space | Essence of linear algebra, chapter 7](https://www.youtube.com/watch?v=uQhTuRlWMxw)
+** [Null Space, Column Space, Row Space](http://ksuweb.kennesaw.edu/~plaval/math3260/rowcolspaces.pdf)
 
 # For contributors:
 
