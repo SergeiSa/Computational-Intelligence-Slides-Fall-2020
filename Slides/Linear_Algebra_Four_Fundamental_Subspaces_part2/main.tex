@@ -144,7 +144,17 @@ As long as we know an orthonormal basis $\mathbf{B}$ in the linear space $\mathc
 
 You can think of it as follows: $\mathbf{B} \mathbf{B}^\top \mathbf{x}$ first finds a decomposition of $\mathbf{x}$ on the orthonormal set of vectors, where all parts of $\mathbf{x}$ not in the span of $\mathbf{B}$ will be mapped to zero; next, it maps this decomposition back into the original coordinates, but the part not-in-the-span-of-$\mathbf{B}$ is lost.
 
-\bigskip
+
+\end{flushleft}
+\end{frame}
+
+
+
+
+\begin{frame}{Projection}
+\framesubtitle{Column space projection and null space projection}
+\begin{flushleft}
+
 
 In general, if linear space $\mathcal{L}$ is given as a span of the columns of some matrix $\mathbf{L}$, the projector $\mathbf{P}$ on that space can be generated as follows:
 %
@@ -152,8 +162,20 @@ In general, if linear space $\mathcal{L}$ is given as a span of the columns of s
     \mathbf{P} = \mathbf{L} \mathbf{L}^+ = \mathbf{L} (\mathbf{L}^\top \mathbf{L})^{-1} \mathbf{L}^\top
 \end{equation}
 
+If $\mathbf{x}  = \mathbf{x}_c + \mathbf{x}_{ln}$, where $\mathbf{x}_c \in \mathcal{C}(\mathbf{L})$ and $\mathbf{x}_{ln} \in \mathcal{C}(\mathbf{L})^\perp$, then $\mathbf{L}^+ \mathbf{x} = \mathbf{L}^+ (\mathbf{x}_c + \mathbf{x}_{ln}) = \mathbf{L}^+\mathbf{x}_c \in \mathcal{N}(\mathbf{L})^\perp$. We observe that since $\mathbf{x}_c$ is in the column space of $\mathbf{L}$, no residual soution to the least squares problem $\mathbf{L}\mathbf{z} = \mathbf{x}_c$ exists and as pointe out before, it lies in the row space $\mathcal{N}(\mathbf{L})^\perp$. And therefore $\mathbf{P}\mathbf{x} = \mathbf{L} \mathbf{L}^+\mathbf{x} = \mathbf{x}_c$
+
+\bigskip
+
+In the same way we can prove that the projection onto the null space of a matrix $\mathcal{L}$ is given as:
+%
+\begin{equation}
+    \mathbf{P}_{null} = \mathbf{L}^+ \mathbf{L}
+\end{equation}
+
+
 \end{flushleft}
 \end{frame}
+
 
 
 \begin{frame}{Projection}
