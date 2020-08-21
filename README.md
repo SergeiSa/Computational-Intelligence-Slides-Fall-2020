@@ -18,8 +18,8 @@
 
 ## References for lectures:
 * Lecture 2, 3: 
-** [3Blue1Brown: Inverse matrices, column space and null space | Essence of linear algebra, chapter 7](https://www.youtube.com/watch?v=uQhTuRlWMxw)
-** [Null Space, Column Space, Row Space](http://ksuweb.kennesaw.edu/~plaval/math3260/rowcolspaces.pdf)
+ * [3Blue1Brown: Inverse matrices, column space and null space | Essence of linear algebra, chapter 7](https://www.youtube.com/watch?v=uQhTuRlWMxw)
+ * [Null Space, Column Space, Row Space](http://ksuweb.kennesaw.edu/~plaval/math3260/rowcolspaces.pdf)
 
 # For contributors:
 
