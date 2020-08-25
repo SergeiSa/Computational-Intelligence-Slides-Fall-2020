@@ -10,6 +10,7 @@
 # Videos:
 * Lecture 1: [part 1](https://youtu.be/56ZVzQcCdQk), [part 2](https://youtu.be/VwmmfpipHTc)
 * Lecture 2: [part 1](https://youtu.be/wc3UT7IZs98), [part 2](https://youtu.be/4iA4CFzyELg), [part 3](https://youtu.be/EdrsJ-l9VLs)
+* Lecture 3: [part 1](https://youtu.be/sTYvIrjrBbQ), [part 2](https://youtu.be/4JUgkA7lWo8)
 
 # Reference material
 
