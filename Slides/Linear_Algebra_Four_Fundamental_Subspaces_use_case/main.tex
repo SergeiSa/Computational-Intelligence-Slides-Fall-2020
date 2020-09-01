@@ -153,7 +153,7 @@ As we know from the first example, for this LTI system all fixed points under co
 
 \bigskip
 
-The problem is solved by projecting $\mathbf{x}^d$ onto the left null space of $\mathbf{N}_x$: $\mathbf{x}^*_s = -(\mathbf{I} - \mathbf{N}_x\mathbf{N}^+_x)\mathbf{x}^d$ (note that $\mathbf{N}_x$ is not an orthonormal basis). We can check it by observing that $\mathbf{x}^f = \mathbf{x}^*_s + \mathbf{x}^d = \mathbf{x}^d - (\mathbf{I} - \mathbf{N}_x\mathbf{N}^+_x)\mathbf{x}^d = \mathbf{N}_x\mathbf{N}^+_x \mathbf{x}^d \in \text{col}(\mathbf{N}_x)$. Any other shirt vector candidate $\mathbf{x}^s = \mathbf{x}^*_s + \mathbf{a}$, where $\mathbf{a} \in \text{lnull}(\mathbf{N}_x)$ will produce $\mathbf{x}^f =  \mathbf{N}_x\mathbf{N}^+_x \mathbf{x}^d + \mathbf{a} \notin \text{col}(\mathbf{N}_x)$.
+The problem is solved by projecting $\mathbf{x}^d$ onto the left null space of $\mathbf{N}_x$: $\mathbf{x}^*_s = -(\mathbf{I} - \mathbf{N}_x\mathbf{N}^+_x)\mathbf{x}^d$ (note that $\mathbf{N}_x$ is not an orthonormal basis). We can check it by observing that $\mathbf{x}^f = \mathbf{x}^*_s + \mathbf{x}^d = \mathbf{x}^d - (\mathbf{I} - \mathbf{N}_x\mathbf{N}^+_x)\mathbf{x}^d = \mathbf{N}_x\mathbf{N}^+_x \mathbf{x}^d \in \text{col}(\mathbf{N}_x)$. Any other shift vector candidate $\mathbf{x}^s = \mathbf{x}^*_s + \mathbf{a}$, where $\mathbf{a} \in \text{lnull}(\mathbf{N}_x)$ will produce $\mathbf{x}^f =  \mathbf{N}_x\mathbf{N}^+_x \mathbf{x}^d + \mathbf{a} \notin \text{col}(\mathbf{N}_x)$.
 
 \end{flushleft}
 \end{frame}
