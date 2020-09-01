@@ -170,7 +170,7 @@ Problem 4.
 \end{aligned}
 \end{equation}
 
-We already solved this problem before, during lecture 2, using projection. Solution is: $\mathbf{x} = -((\mathbf{I} - \mathbf{B}\mathbf{B}^+) \mathbf{A})^+(\mathbf{I} - \mathbf{B}\mathbf{B}^+) \mathbf{c}$.
+We already solved this problem before, during lecture 3, using projection. Solution is: $\mathbf{x} = ((\mathbf{I} - \mathbf{B}\mathbf{B}^+) \mathbf{A})^+(\mathbf{I} - \mathbf{B}\mathbf{B}^+) \mathbf{c}$. Note that the sign in fron of the expression is different, since here $\mathbf{c}$ is positive on the right-hand side of the eq., while in the lecture 3 this vector for positive on the left-hand side. 
 
 \bigskip
 
@@ -185,11 +185,26 @@ Problem 5.
 \end{aligned}
 \end{equation}
 
-We can treat is as a special case of the previous problem, where $\mathbf{B} = \mathbf{0}$, hence $(\mathbf{I} - \mathbf{B}\mathbf{B}^+) = \mathbf{I}$, and the solution is: $\mathbf{x} = -\mathbf{A}^+\mathbf{c}$.
+We can treat is as a special case of the previous problem, where $\mathbf{B} = \mathbf{0}$, hence $(\mathbf{I} - \mathbf{B}\mathbf{B}^+) = \mathbf{I}$, and the solution is: $\mathbf{x} = \mathbf{A}^+\mathbf{c}$.
+
+\end{flushleft}
+\end{frame}
+
+
+
+\begin{frame}{Some problems with exact analytical solutions}
+\framesubtitle{Part 4}
+\begin{flushleft}
+
+Notice that solution for the problem 5 and problem 3 are written identically, even though problem 3 asks us to minimize residual of the linear system, while problem 5 - find minimum norm solution. 
 
 \bigskip
 
-Notice that solution for the problem 5 and problem 3 are written identically, even though problem 3 asks us to minimize residual of the linear system, while problem 5 - find minimum norm solution.
+This illustrates an iportant fact that solution to the least squares problem, formulated either as "minimization of a residual" or as a "minimum norm solution" are given by the same formula, which we call Moore-Penrose pseudoinverse.
+
+\bigskip
+
+Another way to achieve the same result is to see that all solutions to $\mathbf{A} \mathbf{x} = \mathbf{c}$ are written as $\mathbf{x} = \mathbf{A}^+\mathbf{c} + \mathbf{N}\mathbf{z}$, where $\mathbf{N} = \text{null}(\mathbf{A})$, and $\mathbf{A}^+\mathbf{c} \in \text{row}(\mathbf{A})$ as we proved previously. Since null space solution $\mathbf{N}\mathbf{z}$ and row space paricular solution $\mathbf{A}^+\mathbf{c}$ are orthagonal, the minimum norm solution corresponds to $\mathbf{z} = \mathbf{0}$, hence $\mathbf{x} = \mathbf{A}^+\mathbf{c}$.
 
 \end{flushleft}
 \end{frame}
