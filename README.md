@@ -6,6 +6,8 @@
 * Lecture 5 - https://github.com/SergeiSa/Computational-Intelligence-Slides-Fall-2020/tree/master/Slides/Least_Squares_and_Quadratic_Programming
 * Lecture 6 - https://github.com/SergeiSa/Computational-Intelligence-Slides-Fall-2020/tree/master/Slides/Domain_Convex_Domains
 * Lecture 7 - https://github.com/SergeiSa/Computational-Intelligence-Slides-Fall-2020/tree/master/Slides/Linear_inequality_representation_of_convex_domains
+* Lecture 8 - https://github.com/SergeiSa/Computational-Intelligence-Slides-Fall-2020/tree/master/Slides/QCQP_SOCP
+* Lecture 9 - https://github.com/SergeiSa/Computational-Intelligence-Slides-Fall-2020/tree/master/Slides/Linear_Programming
 
 # Videos:
 * Lecture 1: [part 1](https://youtu.be/56ZVzQcCdQk), [part 2](https://youtu.be/VwmmfpipHTc)
@@ -13,6 +15,8 @@
 * Lecture 3: [part 1](https://youtu.be/sTYvIrjrBbQ), [part 2](https://youtu.be/4JUgkA7lWo8), [part 3](https://youtu.be/XGThWt5H6jw)
 * [Lecture 4](https://youtu.be/DDnDRwW3qLg)
 * [Lecture 5](https://youtu.be/bbyF89OnpBo)
+* [Lecture 6](https://youtu.be/X3yeneA10co)
+* [Lecture 7](https://youtu.be/4FboGNcsQhU)
 
 
 # Reference material
