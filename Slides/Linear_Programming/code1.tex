@@ -1,0 +1,21 @@
+\begin{lstlisting}[language=Matlab]
+func = @(t) t^2;
+derivative_func = @(t) 2*t;
+
+approx_points = [-1, -0.3, 0, 0.3, 1];
+n = length(approx_points);
+a = zeros(n, 1); 
+b = zeros(n, 1);
+
+for i = 1:n
+    t = approx_points(i);
+    a(i) = derivative_func(t); 
+    b(i) = func(t) - a(i)*t ;
+end
+
+f = [1; 0];
+lin_A = [-ones(n, 1), a];
+lin_b = -b;
+x = linprog(f, lin_A,lin_b, [], []);
+
+\end{lstlisting}

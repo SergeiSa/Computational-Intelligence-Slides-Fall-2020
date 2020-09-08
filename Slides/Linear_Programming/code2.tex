@@ -1,0 +1,19 @@
+
+\begin{lstlisting}[language=Matlab]
+
+V = randn(10, 2);
+k = convhull(V);
+P = V(k, :);
+
+[domain_A, domain_b] = vert2con(P);
+norm_A = vecnorm(domain_A');
+
+f = [-1; 0; 0];
+A = [reshape(norm_A, [], 1), domain_A];
+b = domain_b;
+
+x = linprog(f, A,b, [], []);
+
+center = [x(2),x(3)];
+r = x(1);
+\end{lstlisting}
