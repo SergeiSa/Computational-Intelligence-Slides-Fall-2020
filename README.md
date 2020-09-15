@@ -18,6 +18,7 @@
 * [Lecture 6](https://youtu.be/X3yeneA10co)
 * [Lecture 7](https://youtu.be/4FboGNcsQhU)
 * [Lecture 8](https://youtu.be/c4qroDnvDak)
+* [Lecture 9](https://youtu.be/NWKTNQfymRQ)
 
 
 # Reference material
