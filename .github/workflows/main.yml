@@ -73,7 +73,13 @@ jobs:
           root_file: main.tex
           working_directory: Slides/Linear_Programming/
           
-
+      - name: Compile LaTeX document SDP
+        uses: xu-cheng/latex-action@master
+        with:
+          root_file: main.tex
+          working_directory: Slides/SDP/
+          
+          
 
       - name: Save Introduction artifact
         uses: actions/upload-artifact@v1
@@ -129,7 +135,15 @@ jobs:
           name: Linear_Programming.pdf
           path: Slides/Linear_Programming/main.pdf
 
+      - name: Save SDP artifact
+        uses: actions/upload-artifact@v1
+        with:
+          name: SDP.pdf
+          path: Slides/SDP/main.pdf
+
               
+              
+          
           
       - name: Update compiled PDFs in git repository
         if: github.event.pull_request.merged == true || (github.event_name == 'push' && github.ref == 'refs/heads/master')
@@ -145,6 +159,7 @@ jobs:
           git add Slides/Linear_inequality_representation_of_convex_domains/main.pdf
           git add Slides/QCQP_SOCP/main.pdf
           git add Slides/Linear_Programming/main.pdf
+          git add Slides/SDP/main.pdf
           
           git commit -m "Update compiled PDFs"
           git push
