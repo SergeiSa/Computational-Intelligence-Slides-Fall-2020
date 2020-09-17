@@ -8,6 +8,7 @@
 * Lecture 7 - https://github.com/SergeiSa/Computational-Intelligence-Slides-Fall-2020/tree/master/Slides/Linear_inequality_representation_of_convex_domains
 * Lecture 8 - https://github.com/SergeiSa/Computational-Intelligence-Slides-Fall-2020/tree/master/Slides/QCQP_SOCP
 * Lecture 9 - https://github.com/SergeiSa/Computational-Intelligence-Slides-Fall-2020/tree/master/Slides/Linear_Programming
+* Lecture 10 - https://github.com/SergeiSa/Computational-Intelligence-Slides-Fall-2020/tree/master/Slides/SDP
 
 # Videos:
 * Lecture 1: [part 1](https://youtu.be/56ZVzQcCdQk), [part 2](https://youtu.be/VwmmfpipHTc)
@@ -19,6 +20,7 @@
 * [Lecture 7](https://youtu.be/4FboGNcsQhU)
 * [Lecture 8](https://youtu.be/c4qroDnvDak)
 * [Lecture 9](https://youtu.be/NWKTNQfymRQ)
+* [Lecture 10](https://youtu.be/GDsKEA85X0A)
 
 
 # Reference material
