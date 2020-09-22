@@ -9,6 +9,8 @@
 * Lecture 8 - https://github.com/SergeiSa/Computational-Intelligence-Slides-Fall-2020/tree/master/Slides/QCQP_SOCP
 * Lecture 9 - https://github.com/SergeiSa/Computational-Intelligence-Slides-Fall-2020/tree/master/Slides/Linear_Programming
 * Lecture 10 - https://github.com/SergeiSa/Computational-Intelligence-Slides-Fall-2020/tree/master/Slides/SDP
+* Lecture 11 - https://github.com/SergeiSa/Computational-Intelligence-Slides-Fall-2020/tree/master/Slides/MICP
+* lecture 12 - https://github.com/SergeiSa/Computational-Intelligence-Slides-Fall-2020/tree/master/Slides/Dynamical_systems_with_constraints
 
 # Videos:
 * Lecture 1: [part 1](https://youtu.be/56ZVzQcCdQk), [part 2](https://youtu.be/VwmmfpipHTc)
@@ -21,6 +23,7 @@
 * [Lecture 8](https://youtu.be/c4qroDnvDak)
 * [Lecture 9](https://youtu.be/NWKTNQfymRQ)
 * [Lecture 10](https://youtu.be/GDsKEA85X0A)
+* [Lecture 11](https://youtu.be/yUmVxlI4jTs)
 
 
 # Reference material
@@ -34,6 +37,11 @@
 * Lecture 2, 3: 
     - [3Blue1Brown: Inverse matrices, column space and null space | Essence of linear algebra, chapter 7](https://www.youtube.com/watch?v=uQhTuRlWMxw)
     - [Null Space, Column Space, Row Space](http://ksuweb.kennesaw.edu/~plaval/math3260/rowcolspaces.pdf)
+* Lecture 11:
+    - [Mixed-integer support in CVX 2.0](http://cvxr.com/news/2012/08/midcp/)
+    - [Footstep Planning on Uneven Terrain with Mixed-Integer Convex
+Optimization](https://groups.csail.mit.edu/robotics-center/public_papers/Deits14a.pdf)
+
 
 # For contributors:
 
