@@ -1,0 +1,12 @@
+\begin{lstlisting}[language=Matlab]
+    subject to
+        for i = 1:number_of_steps
+            A1*x(:, i) <= b1 + (1 - c(1, i))*bigM;
+            A2*x(:, i) <= b2 + (1 - c(2, i))*bigM;
+            A3*x(:, i) <= b3 + (1 - c(3, i))*bigM;
+            c(1, i) + c(2, i) + c(3, i) == 1;
+        end
+cvx_end
+
+plot(x(1, :)', x(2, :)', '^', 'MarkerEdgeColor', 'k', 'MarkerSize', 10, 'LineWidth', 2); hold on;
+\end{lstlisting}

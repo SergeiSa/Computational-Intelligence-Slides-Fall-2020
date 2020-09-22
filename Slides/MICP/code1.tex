@@ -1,0 +1,19 @@
+\begin{lstlisting}[language=Matlab]
+n = 2;
+shift_1 = 1*rand(n, 1);
+shift_2 = 1*rand(n, 1);
+V1 = randn(n, 6);
+V2 = randn(n, 6) + shift_1;
+V3 = randn(n, 6) + shift_1 + shift_2;
+
+indices_convhull = convhull(V1');
+V1 = V1(:, indices_convhull);
+indices_convhull = convhull(V2');
+V2 = V2(:, indices_convhull);
+indices_convhull = convhull(V3');
+V3 = V3(:, indices_convhull);
+
+[A1, b1] = vert2con(V1');
+[A2, b2] = vert2con(V2');
+[A3, b3] = vert2con(V3');
+\end{lstlisting}

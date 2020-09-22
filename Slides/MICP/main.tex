@@ -1,0 +1,523 @@
+\documentclass{beamer}
+
+ \pdfmapfile{+sansmathaccent.map}
+
+
+\mode<presentation>
+{
+  \usetheme{Warsaw} % or try Darmstadt, Madrid, Warsaw, Rochester, CambridgeUS, ...
+  \usecolortheme{crane} % or try seahorse, beaver, crane, wolverine, ...
+  \usefonttheme{serif}  % or try serif, structurebold, ...
+  \setbeamertemplate{navigation symbols}{}
+  \setbeamertemplate{caption}[numbered]
+} 
+
+\renewcommand{\familydefault}{\rmdefault}
+
+
+\hypersetup{
+    colorlinks=true,
+    linkcolor=blue,
+    filecolor=blue,      
+    urlcolor=blue,
+}
+
+\usepackage{amsmath}
+\usepackage{mathtools}
+
+\DeclareMathOperator*{\argmin}{arg\,min}
+
+\usepackage{subcaption}
+
+\usepackage{tikz}
+\tikzset{every picture/.style={line width=0.75pt}} %set default line width to 0.75pt        
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+
+\usepackage{listings}
+\usepackage{color}
+\definecolor{mygreen}{rgb}{0,0.6,0}
+\definecolor{mygray}{rgb}{0.5,0.5,0.5}
+\definecolor{mymauve}{rgb}{0.58,0,0.82}
+
+\definecolor{cof}{RGB}{255,187,0}
+\definecolor{pur}{RGB}{205,137,0}
+\definecolor{greeo}{RGB}{91,173,69}
+\definecolor{greet}{RGB}{52,111,72}
+
+\usetikzlibrary{fadings}
+\usetikzlibrary{patterns}
+\usetikzlibrary{shadows.blur}
+\usetikzlibrary{shapes}
+
+\lstset{ 
+  backgroundcolor=\color{white},   % choose the background color; you must add \usepackage{color} or \usepackage{xcolor}; should come as last argument
+  basicstyle=\footnotesize,        % the size of the fonts that are used for the code
+  breakatwhitespace=false,         % sets if automatic breaks should only happen at whitespace
+  breaklines=true,                 % sets automatic line breaking
+  captionpos=b,                    % sets the caption-position to bottom
+  commentstyle=\color{mygreen},    % comment style
+  deletekeywords={...},            % if you want to delete keywords from the given language
+  escapeinside={\%*}{*)},          % if you want to add LaTeX within your code
+  extendedchars=true,              % lets you use non-ASCII characters; for 8-bits encodings only, does not work with UTF-8
+  firstnumber=0000,                % start line enumeration with line 0000
+  frame=single,	                   % adds a frame around the code
+  keepspaces=true,                 % keeps spaces in text, useful for keeping indentation of code (possibly needs columns=flexible)
+  keywordstyle=\color{blue},       % keyword style
+  language=Octave,                 % the language of the code
+  morekeywords={*,...},            % if you want to add more keywords to the set
+  numbers=left,                    % where to put the line-numbers; possible values are (none, left, right)
+  numbersep=5pt,                   % how far the line-numbers are from the code
+  numberstyle=\tiny\color{mygray}, % the style that is used for the line-numbers
+  rulecolor=\color{black},         % if not set, the frame-color may be changed on line-breaks within not-black text (e.g. comments (green here))
+  showspaces=false,                % show spaces everywhere adding particular underscores; it overrides 'showstringspaces'
+  showstringspaces=false,          % underline spaces within strings only
+  showtabs=false,                  % show tabs within strings adding particular underscores
+  stepnumber=2,                    % the step between two line-numbers. If it's 1, each line will be numbered
+  stringstyle=\color{mymauve},     % string literal style
+  tabsize=2,	                   % sets default tabsize to 2 spaces
+  title=\lstname                   % show the filename of files included with \lstinputlisting; also try caption instead of title
+}
+
+
+
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+
+\title{ Mixed Integer Convex Programming }
+\subtitle{Computational Intelligence, Lecture 11}
+\author{by Sergei Savin}
+\centering
+\date{Fall 2020}
+
+
+
+\begin{document}
+\maketitle
+
+
+\begin{frame}{Content}
+
+\begin{itemize}
+\item Mixed Integer Linear Programming (MILP)
+\item Mixed Integer Quadratic Programming (MIQP)
+\item Remarks
+\item Example: Footstep planning
+\item Big-M method relaxation
+\begin{itemize}
+    \item Basic idea
+    \item Systems of inequalities
+    \item Illustration, part 1
+    \item Illustration, part 2
+    \item Multiple variables
+\end{itemize}
+\item  Example: Footstep planning
+\begin{itemize}
+    \item Formulation as MIQP
+    \item Evenly spaced steps
+    \item Code, part 1
+    \item Code, part 2
+    \item Code, part 3
+\end{itemize}
+\item Homework
+\end{itemize}
+
+\end{frame}
+
+
+
+\begin{frame}{Mixed Integer Linear Programming (MILP)}
+\framesubtitle{General form}
+\begin{flushleft}
+
+A general form of a mixed-integer linear program is:
+
+%
+\begin{equation} \label{LP}
+\begin{aligned}
+& \underset{\mathbf{x}, \mathbf{y}}{\text{minimize}}
+& & \mathbf{f}_1^\top \mathbf{x} + \mathbf{f}_2^\top \mathbf{y}, \\
+& \text{subject to}
+& & \begin{cases} 
+\begin{bmatrix}
+\mathbf{A}_{11} & \mathbf{A}_{12} \\
+\mathbf{A}_{21} & \mathbf{A}_{22}
+\end{bmatrix} 
+\begin{bmatrix}
+\mathbf{x} \\
+\mathbf{y}
+\end{bmatrix}
+\leq 
+\begin{bmatrix}
+\mathbf{b}_1 \\
+\mathbf{b}_2
+\end{bmatrix}, \\ 
+\\
+\begin{bmatrix}
+\mathbf{C}_{11} & \mathbf{C}_{12} \\
+\mathbf{C}_{21} & \mathbf{C}_{22}
+\end{bmatrix} 
+\begin{bmatrix}
+\mathbf{x} \\
+\mathbf{y}
+\end{bmatrix} = 
+\begin{bmatrix}
+\mathbf{d}_1 \\
+\mathbf{d}_2
+\end{bmatrix},  \\
+\mathbf{y} \in \mathbb{N}^n.
+\end{cases}
+%
+\end{aligned}
+\end{equation}
+ 
+In other words, the only difference is that some of the variables (denoted above as $\mathbf{y}$) are only allowed to assume pure integer values.
+ 
+\end{flushleft}
+\end{frame}
+
+
+
+\begin{frame}{Mixed Integer Quadratic Programming (MIQP)}
+\framesubtitle{General form}
+\begin{flushleft}
+
+A general form of a mixed-integer quadratic program is:
+
+%
+\begin{equation} \label{QP}
+\begin{aligned}
+& \underset{\mathbf{x}, \mathbf{y}}{\text{minimize}}
+& & 
+\begin{bmatrix}
+\mathbf{x} & \mathbf{y}
+\end{bmatrix}
+\begin{bmatrix}
+\mathbf{H}_{11} & \mathbf{H}_{12} \\
+\mathbf{H}_{21} & \mathbf{H}_{22}
+\end{bmatrix} 
+\begin{bmatrix}
+\mathbf{x} \\
+\mathbf{y}
+\end{bmatrix} +
+\begin{bmatrix}
+\mathbf{f}_1 & \mathbf{f}_2
+\end{bmatrix}
+\begin{bmatrix}
+\mathbf{x} \\
+\mathbf{y}
+\end{bmatrix}, \\
+& \text{subject to}
+& & \begin{cases} 
+\begin{bmatrix}
+\mathbf{A}_{11} & \mathbf{A}_{12} \\
+\mathbf{A}_{21} & \mathbf{A}_{22}
+\end{bmatrix} 
+\begin{bmatrix}
+\mathbf{x} \\
+\mathbf{y}
+\end{bmatrix}
+\leq 
+\begin{bmatrix}
+\mathbf{b}_1 \\
+\mathbf{b}_2
+\end{bmatrix}, \\ 
+\\
+\begin{bmatrix}
+\mathbf{C}_{11} & \mathbf{C}_{12} \\
+\mathbf{C}_{21} & \mathbf{C}_{22}
+\end{bmatrix} 
+\begin{bmatrix}
+\mathbf{x} \\
+\mathbf{y}
+\end{bmatrix} = 
+\begin{bmatrix}
+\mathbf{d}_1 \\
+\mathbf{d}_2
+\end{bmatrix},  \\
+\mathbf{y} \in \mathbb{N}^n.
+\end{cases}
+%
+\end{aligned}
+\end{equation}
+ 
+Other mixed-integer convex programs can be constructed likewise  from their pure convex counterparts.
+ 
+\end{flushleft}
+\end{frame}
+
+
+
+\begin{frame}{Remarks}
+% \framesubtitle{General form}
+\begin{flushleft}
+
+\begin{itemize}
+    \item Mixed-integer convex programs are not convex, even if the name seems to suggest otherwise. 
+    \item The "convex program" in the phrase "mixed-integer convex program" should be understood as "if we fix values of the integer variables, or relax them into reals, the result will be a convex program".
+    \item Mixed integer programs are usually solved using \emph{branch and bound algorithms}; in worse case scenario, the algorithms performs exhaustive search.
+    \item In robotics applications, integer variables in mixed integer programs are often restricted to binary values, i.e. $\mathbf{y} \in \{0, 1\}^n.$. It is still called "mixed-integer" in the literature, although phrases such as "mixed-binary" or "binary constraints" are not rare.
+\end{itemize}
+ 
+\end{flushleft}
+\end{frame}
+
+
+
+\begin{frame}{Example: Footstep planning}
+\framesubtitle{Problem statement}
+\begin{flushleft}
+
+Given $N$ convex regions defined by linear inequalities $\{ \mathbf{x}: \  \mathbf{A}_i \mathbf{x} \leq \mathbf{b}_i \}$ (which is called H-polytope representation), find a sequence of $K$ points (footsteps) from the given starting point to the given goal point, such that all footsteps lie in one of the convex regions.
+
+\begin{equation}
+\begin{aligned}
+& \underset{\mathbf{x}_1, \ ..., \ \mathbf{x}_K}{\text{minimize}}
+& & ||\mathbf{x}_1 - \mathbf{x}_{\text{start}}|| + ||\mathbf{x}_K - \mathbf{x}_{\text{goal}}||, \\
+& \text{subject to}
+& & \exists \{ \mathbf{A}_j, \mathbf{b}_j\} \in \Omega \ \text{s.t.} \ \mathbf{A}_j\mathbf{x}_i \leq \mathbf{b}_j
+\end{aligned}
+\end{equation}
+
+\bigskip
+
+where $\Omega = \{ \{ \mathbf{A}_1, \mathbf{b}_1\}, \ \{ \mathbf{A}_2, \mathbf{b}_2\}, \ ..., \ \{ \mathbf{A}_N, \mathbf{b}_N\} \}$. This is not a convex program.
+ 
+\end{flushleft}
+\end{frame}
+
+
+
+
+\begin{frame}{Big-M method relaxation}
+\framesubtitle{Basic idea}
+\begin{flushleft}
+
+
+One of the key methods associated with the use of mixed-integer programming in robotics is the big-M method. 
+
+\bigskip
+
+Assume you have two inequalities, $\mathbf{a}_1^\top \mathbf{x} \leq b_1$ and $\mathbf{a}_2^\top \mathbf{x} \leq b_2$, and you are happy if at least one of them holds. Define a new binary variables $c_1, c_2 \in \{0, \ 1 \}$ and find a big enough constant $M$, such that $\mathbf{a}_1^\top \mathbf{x} \leq b_1 + M$ and $\mathbf{a}_2^\top \mathbf{x} \leq b_2 + M$ holds for all of your domain (of the part of it you are interested in). Then you write your constraints as:
+
+\begin{equation}
+    \begin{cases}
+    \mathbf{a}_1^\top \mathbf{x} \leq b_1 + M \cdot c_1 \\
+    \mathbf{a}_2^\top \mathbf{x} \leq b_2 + M \cdot c_2 \\
+    c_1 + c_2 = 1  \\
+    c_i  \in \{0, \ 1 \}
+    \end{cases}
+\end{equation}
+
+\end{flushleft}
+\end{frame}
+
+
+
+
+\begin{frame}{Big-M method relaxation}
+\framesubtitle{Systems of inequalities}
+\begin{flushleft}
+
+It works the same way for the case when you have three (or two or more) systems of inequalities $\mathbf{A}_1 \mathbf{x} \leq \mathbf{b}_1$, $\mathbf{A}_2 \mathbf{x} \leq \mathbf{b}_2$, $\mathbf{A}_3 \mathbf{x} \leq \mathbf{b}_3$ and are happy if at least one holds:
+
+\begin{equation}
+    \begin{cases}
+    \mathbf{A}_1 \mathbf{x} \leq \mathbf{b}_1 + M \cdot \mathbf{1} \cdot (1 - c_1) \\
+    \mathbf{A}_2 \mathbf{x} \leq \mathbf{b}_2 + M \cdot \mathbf{1} \cdot (1 - c_2) \\
+    \mathbf{A}_3 \mathbf{x} \leq \mathbf{b}_3 + M \cdot \mathbf{1} \cdot (1 - c_3) \\
+    c_1 + c_2 + c_3 = 1 \\
+    c_i  \in \{0, \ 1 \}
+    \end{cases}
+\end{equation}
+
+where $\mathbf{1}$ is a vector of all ones. Notice that constraint $c_1 + c_2 + c_3 = 1$ can be replaced with $c_1 + c_2 + c_3 >= 1$, allowing avoid relaxing more than one region.
+
+\end{flushleft}
+\end{frame}
+
+
+
+\begin{frame}{Big-M method relaxation}
+\framesubtitle{Illustration, part 1}
+\begin{flushleft}
+
+Below are two H-polytops (convex regions represented by systems of inequalities):
+
+\begin{figure} [h!]
+\begin{center}
+\includegraphics[width=2.6in]{fig1.png}
+\end{center} 
+% \caption{AR 601 bipedal robot, Innopolis University}
+\end{figure}
+
+As we can see, their union represents a non-convex domain, and they have no intersection.
+
+\end{flushleft}
+\end{frame}
+
+
+\begin{frame}{Big-M method relaxation}
+\framesubtitle{Illustration, part 2}
+\begin{flushleft}
+
+Now, one of them is relaxed as described above. Notice that the intersection of the two polytopes is non-relaxed polytope. 
+
+\begin{figure}
+\centering
+\begin{subfigure}{.5\textwidth}
+  \centering
+  \includegraphics[width=1.1\linewidth]{fig2.png}
+%   \caption{Simplified model}
+\end{subfigure}%
+\begin{subfigure}{.5\textwidth}
+  \centering
+  \includegraphics[width=1.1\linewidth]{fig3.png}
+%   \caption{Simplified model}
+\end{subfigure}
+\end{figure}
+
+\end{flushleft}
+\end{frame}
+
+
+\begin{frame}{Big-M method relaxation}
+\framesubtitle{Multiple variables}
+\begin{flushleft}
+
+If you have multiple variables $\mathbf{x}_1$, ..., $\mathbf{x}_K$, and each should belong to at least one of the H-polytopes $\{ \mathbf{A}_i, \mathbf{b}_i\}$, this can also be represented using big-M method:
+
+\begin{equation}
+    \begin{cases}
+    \mathbf{A}_1 \mathbf{x}_k \leq \mathbf{b}_1 + M \cdot \mathbf{1} \cdot (1 - c_{1, k}) \\
+    \mathbf{A}_2 \mathbf{x}_k \leq \mathbf{b}_2 + M \cdot \mathbf{1} \cdot (1 - c_{2, k}) \\
+    \mathbf{A}_3 \mathbf{x}_k \leq \mathbf{b}_3 + M \cdot \mathbf{1} \cdot (1 - c_{3, k}) \\
+    c_{1, k} + c_{2, k} + c_{3, k} = 1 \\
+    c_{i, k}  \in \{0, \ 1 \} \\
+    k = 1,...,K
+    \end{cases}
+\end{equation}
+
+Notice that the only difference from the previous example is that now we have $K$ sets of binary variables $c_{1, k}$,  $c_{2, k}$ and $c_{3, k}$.
+
+\end{flushleft}
+\end{frame}
+
+
+
+
+
+
+\begin{frame}{Example: Footstep planning}
+\framesubtitle{Formulation as MIQP}
+\begin{flushleft}
+
+Using big-M relaxation we can now formulate the problem as follows:
+
+\begin{equation}
+\begin{aligned}
+& \underset{\mathbf{x}_1, \ ..., \ \mathbf{x}_K}{\text{minimize}}
+& & ||\mathbf{x}_1 - \mathbf{x}_{\text{start}}|| + ||\mathbf{x}_K - \mathbf{x}_{\text{goal}}||, \\
+& \text{subject to}
+& & \begin{cases}
+    \mathbf{A}_i \mathbf{x}_k \leq \mathbf{b}_i + M \cdot \mathbf{1} \cdot (1 - c_{i, k}), \ i = 1,...,N \\
+    \sum_{i=1}^N c_{i, k} = 1 \\
+    c  \in \{0, \ 1 \}^{N, \ K} \\
+    k = 1,...,K
+    \end{cases}
+\end{aligned}
+\end{equation}
+
+ 
+\end{flushleft}
+\end{frame}
+
+
+
+
+
+\begin{frame}{Example: Footstep planning}
+\framesubtitle{Evenly spaced steps}
+\begin{flushleft}
+
+In order to make the footsteps evenly spaced we add cost on the distance between consequent steps:
+
+\begin{equation}
+\begin{aligned}
+& \underset{\mathbf{x}_1, \ ..., \ \mathbf{x}_K}{\text{minimize}}
+& & ||\mathbf{x}_1 - \mathbf{x}_{\text{start}}|| + ||\mathbf{x}_K - \mathbf{x}_{\text{goal}}|| + w \cdot \sum_{k=1}^{K-1} ||\mathbf{x}_{i+1} - \mathbf{x}_i||, \\
+& \text{subject to}
+& & \begin{cases}
+    \mathbf{A}_i \mathbf{x}_k \leq \mathbf{b}_i + M \cdot \mathbf{1} \cdot (1 - c_{i, k}), \ i = 1,...,N \\
+    \sum_{i=1}^N c_{i, k} = 1 \\
+    c  \in \{0, \ 1 \}^{N, \ K} \\
+    k = 1,...,K
+    \end{cases}
+\end{aligned}
+\end{equation}
+
+where $w$ is a weight, a coefficient we can tune to adjust relative importance of our primary objective (starting from the point $\mathbf{x}_{\text{start}}$ and finishing at the point $\mathbf{x}_{\text{goal}}$ and our secondary objective (making the footsteps evenly spaced).  
+ 
+\end{flushleft}
+\end{frame}
+
+
+
+
+\begin{frame}{Example: Footstep planning}
+\framesubtitle{Code, part 1}
+\begin{flushleft}
+
+\input{code1.tex}
+ 
+\end{flushleft}
+\end{frame}
+
+
+\begin{frame}{Example: Footstep planning}
+\framesubtitle{Code, part 2}
+\begin{flushleft}
+
+\input{code2.tex}
+ 
+\end{flushleft}
+\end{frame}
+
+
+\begin{frame}{Example: Footstep planning}
+\framesubtitle{Code, part 3}
+\begin{flushleft}
+
+\input{code3.tex}
+ 
+\end{flushleft}
+\end{frame}
+
+
+
+
+\begin{frame}{Homework}
+% \framesubtitle{Parameter estimation}
+\begin{flushleft}
+
+Implement footstep planning for a biped, making sure every pair of steps lands in the same H-polytope.
+
+\end{flushleft}
+\end{frame}
+
+
+
+\begin{frame}
+\centerline{Lecture slides are available via Moodle.}
+\bigskip
+\centerline{You can help improve these slides at:}
+
+\centerline{\href{https://github.com/SergeiSa/Computational-Intelligence-Slides-Fall-2020}{github.com/SergeiSa/Computational-Intelligence-Slides-Fall-2020}}
+
+
+\bigskip
+\centerline{Check Moodle for additional links, videos, textbook suggestions.}
+\end{frame}
+
+\end{document}

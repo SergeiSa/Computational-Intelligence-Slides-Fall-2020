@@ -1,0 +1,19 @@
+\begin{lstlisting}[language=Matlab]
+number_of_steps = 7; 
+start_point = sum(V1, 2) / size(V1, 2);
+finish_point = sum(V3, 2) / size(V3, 2);
+weight_goal = 5;
+bigM = 15;
+
+cvx_begin
+    variable x(n, number_of_steps)
+    binary variable c(3, number_of_steps);
+
+    cost = 0;
+    for i = 1:(number_of_steps-1)
+        cost = cost + norm(x(:, i) - x(:, i+1));
+    end
+    cost = cost + norm(x(:, 1) - start_point)*weight_goal;
+    cost = cost + norm(x(:, number_of_steps) - finish_point)*weight_goal;
+    minimize( cost )
+\end{lstlisting}

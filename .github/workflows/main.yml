@@ -79,6 +79,24 @@ jobs:
           root_file: main.tex
           working_directory: Slides/SDP/
           
+      - name: Compile LaTeX document SDP
+        uses: xu-cheng/latex-action@master
+        with:
+          root_file: main.tex
+          working_directory: Slides/SDP/
+          
+      - name: Compile LaTeX document MICP
+        uses: xu-cheng/latex-action@master
+        with:
+          root_file: main.tex
+          working_directory: Slides/MICP/
+          
+      - name: Compile LaTeX document Dynamical_systems_with_constraints
+        uses: xu-cheng/latex-action@master
+        with:
+          root_file: main.tex
+          working_directory: Slides/Dynamical_systems_with_constraints/
+          
           
 
       - name: Save Introduction artifact
@@ -141,8 +159,19 @@ jobs:
           name: SDP.pdf
           path: Slides/SDP/main.pdf
 
-              
-              
+      - name: Save MICP artifact
+        uses: actions/upload-artifact@v1
+        with:
+          name: MICP.pdf
+          path: Slides/MICP/main.pdf
+
+      - name: Save Dynamical_systems_with_constraints artifact
+        uses: actions/upload-artifact@v1
+        with:
+          name: Dynamical_systems_with_constraints.pdf
+          path: Slides/Dynamical_systems_with_constraints/main.pdf
+
+                   
           
           
       - name: Update compiled PDFs in git repository
@@ -160,6 +189,8 @@ jobs:
           git add Slides/QCQP_SOCP/main.pdf
           git add Slides/Linear_Programming/main.pdf
           git add Slides/SDP/main.pdf
+          git add Slides/MICP/main.pdf
+          git add Slides/Dynamical_systems_with_constraints/main.pdf
           
           git commit -m "Update compiled PDFs"
           git push

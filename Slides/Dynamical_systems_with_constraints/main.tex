@@ -1,0 +1,442 @@
+\documentclass{beamer}
+
+ \pdfmapfile{+sansmathaccent.map}
+
+
+\mode<presentation>
+{
+  \usetheme{Warsaw} % or try Darmstadt, Madrid, Warsaw, Rochester, CambridgeUS, ...
+  \usecolortheme{crane} % or try seahorse, beaver, crane, wolverine, ...
+  \usefonttheme{serif}  % or try serif, structurebold, ...
+  \setbeamertemplate{navigation symbols}{}
+  \setbeamertemplate{caption}[numbered]
+} 
+
+\renewcommand{\familydefault}{\rmdefault}
+
+
+\hypersetup{
+    colorlinks=true,
+    linkcolor=blue,
+    filecolor=blue,      
+    urlcolor=blue,
+}
+
+\usepackage{amsmath}
+\usepackage{mathtools}
+
+\DeclareMathOperator*{\argmin}{arg\,min}
+
+\usepackage{subcaption}
+
+\usepackage{tikz}
+\tikzset{every picture/.style={line width=0.75pt}} %set default line width to 0.75pt        
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+
+\usepackage{listings}
+\usepackage{color}
+\definecolor{mygreen}{rgb}{0,0.6,0}
+\definecolor{mygray}{rgb}{0.5,0.5,0.5}
+\definecolor{mymauve}{rgb}{0.58,0,0.82}
+
+\definecolor{cof}{RGB}{255,187,0}
+\definecolor{pur}{RGB}{205,137,0}
+\definecolor{greeo}{RGB}{91,173,69}
+\definecolor{greet}{RGB}{52,111,72}
+
+\usetikzlibrary{fadings}
+\usetikzlibrary{patterns}
+\usetikzlibrary{shadows.blur}
+\usetikzlibrary{shapes}
+
+\lstset{ 
+  backgroundcolor=\color{white},   % choose the background color; you must add \usepackage{color} or \usepackage{xcolor}; should come as last argument
+  basicstyle=\footnotesize,        % the size of the fonts that are used for the code
+  breakatwhitespace=false,         % sets if automatic breaks should only happen at whitespace
+  breaklines=true,                 % sets automatic line breaking
+  captionpos=b,                    % sets the caption-position to bottom
+  commentstyle=\color{mygreen},    % comment style
+  deletekeywords={...},            % if you want to delete keywords from the given language
+  escapeinside={\%*}{*)},          % if you want to add LaTeX within your code
+  extendedchars=true,              % lets you use non-ASCII characters; for 8-bits encodings only, does not work with UTF-8
+  firstnumber=0000,                % start line enumeration with line 0000
+  frame=single,	                   % adds a frame around the code
+  keepspaces=true,                 % keeps spaces in text, useful for keeping indentation of code (possibly needs columns=flexible)
+  keywordstyle=\color{blue},       % keyword style
+  language=Octave,                 % the language of the code
+  morekeywords={*,...},            % if you want to add more keywords to the set
+  numbers=left,                    % where to put the line-numbers; possible values are (none, left, right)
+  numbersep=5pt,                   % how far the line-numbers are from the code
+  numberstyle=\tiny\color{mygray}, % the style that is used for the line-numbers
+  rulecolor=\color{black},         % if not set, the frame-color may be changed on line-breaks within not-black text (e.g. comments (green here))
+  showspaces=false,                % show spaces everywhere adding particular underscores; it overrides 'showstringspaces'
+  showstringspaces=false,          % underline spaces within strings only
+  showtabs=false,                  % show tabs within strings adding particular underscores
+  stepnumber=2,                    % the step between two line-numbers. If it's 1, each line will be numbered
+  stringstyle=\color{mymauve},     % string literal style
+  tabsize=2,	                   % sets default tabsize to 2 spaces
+  title=\lstname                   % show the filename of files included with \lstinputlisting; also try caption instead of title
+}
+
+
+
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+
+\title{ Dynamical systems with constraints }
+\subtitle{Computational Intelligence, Lecture 12}
+\author{by Sergei Savin}
+\centering
+\date{Fall 2020}
+
+
+
+\begin{document}
+\maketitle
+
+
+\begin{frame}{Content}
+
+\begin{itemize}
+\item Mechanical systems with constraints
+\begin{itemize}
+    \item Lagrange equations
+    \item Manipulator equations
+    \item Full description of constrained dynamics
+    \item Linear description of constrained dynamics
+\end{itemize}
+\item Implicit (minimal) representation of a constrained system
+\item Inverse dynamics
+\begin{itemize}
+    \item LTI
+    \item Manipulator equations
+    \item Quadratic program
+\end{itemize}
+\item Homework
+\end{itemize}
+
+\end{frame}
+
+
+
+\begin{frame}{Mechanical systems with constraints}
+\framesubtitle{Lagrange equations}
+\begin{flushleft}
+
+\emph{Lagrange equations} are a basic tool for modelling multi-body mechanical systems. General form is given as:
+
+\begin{equation}
+    \frac{d}{dt} \frac{\partial T}{\partial \dot{\mathbf{q}}} - \frac{\partial T}{\partial \mathbf{q}} = \tau
+\end{equation}
+
+where $T$ is kinetic energy of the system, $\mathbf{q}$ is the vector of generalized coordinates and $\tau$ is the vector of generalized torques.
+ 
+\bigskip
+
+For systems with \emph{constraints}, for example $\mathbf{f}(\mathbf{q}) = 0$, Lagrange equations take a different form:
+
+\begin{equation}
+    \frac{d}{dt} \frac{\partial T}{\partial \dot{\mathbf{q}}} - \frac{\partial T}{\partial \mathbf{q}} = \tau + \frac{\partial \mathbf{f}}{\partial \mathbf{q}}^\top \lambda
+\end{equation}
+ 
+\end{flushleft}
+\end{frame}
+
+
+
+
+\begin{frame}{Mechanical systems with constraints}
+\framesubtitle{Manipulator equations}
+\begin{flushleft}
+
+Lagrange equations can be easily converted to a \emph{manipulator equations} form:
+
+\begin{equation}
+\label{eq:manipulator}
+    \mathbf{H}\ddot{\mathbf{q}} + \mathbf{C}\dot{\mathbf{q}} + \mathbf{g} = \mathbf{T}\mathbf{u}
+\end{equation}
+
+where $\mathbf{H}$ is a generalized inertia matrix, $\mathbf{C}$ is a matrix of generalized inertial forces, $\mathbf{g}$ is a generalized gravity force, $\mathbf{T}$ is a control map (control matrix), and $\mathbf{u}$ is a vector of control inputs.
+ 
+\bigskip
+
+Manipulator equations for systems with constraints $\mathbf{f}(\mathbf{q}) = 0$ are very similar:
+ 
+\begin{equation}
+\label{eq:manipulator:constrained}
+    \mathbf{H}\ddot{\mathbf{q}} + \mathbf{C}\dot{\mathbf{q}} + \mathbf{g} = \mathbf{T}\mathbf{u} + \mathbf{F}^\top \lambda
+\end{equation}
+
+where $\mathbf{F} = \frac{\partial \mathbf{f}}{\partial \mathbf{q}}$ and $\lambda$ are Lagrange multipliers, encoding reaction forces ta ht enforce constraints.
+
+\end{flushleft}
+\end{frame}
+
+
+
+\begin{frame}{Mechanical systems with constraints}
+\framesubtitle{Full description of constrained dynamics}
+\begin{flushleft}
+
+It is not sufficient to provide \eqref{eq:manipulator:constrained} to describe the behaviour of the system, since it depends both of the differential equation and the algebraic constraint.
+
+\bigskip
+
+If we want to study how generalized accelerations $\ddot{\mathbf{q}}$ behave, we can differentiate $\mathbf{f}(\mathbf{q}) = 0$ twice and add the result to the manipulator equation:
+ 
+\begin{equation}
+\begin{cases}
+\label{eq:manipulator:constrained2}
+    \mathbf{H}\ddot{\mathbf{q}} + \mathbf{C}\dot{\mathbf{q}} + \mathbf{g} = \mathbf{T}\mathbf{u} + \mathbf{F}^\top \lambda \\
+    \mathbf{F}\ddot{\mathbf{q}} + \dot{\mathbf{F}}\dot{\mathbf{q}} = 0
+\end{cases}
+\end{equation}
+
+Equation \eqref{eq:manipulator:constrained2} can be solved with respect to variables $\ddot{\mathbf{q}}$ and $\lambda$.
+
+\end{flushleft}
+\end{frame}
+
+
+
+\begin{frame}{Mechanical systems with constraints}
+\framesubtitle{Linear description of constrained dynamics}
+\begin{flushleft}
+
+Introducing change of variables $\mathbf{x} = \begin{bmatrix} \mathbf{q} \\ \dot{\mathbf{q}} \end{bmatrix}$ we can linearize dynamics \eqref{eq:manipulator} to obtain form:
+
+\begin{equation}
+\label{eq:LTI}
+    \dot{\mathbf{x}} = \mathbf{A} \mathbf{x} + \mathbf{B} \mathbf{u} + \mathbf{c}
+\end{equation}
+
+where $\mathbf{A}$ is the state matrix, $\mathbf{B}$ is the control matrix and $\mathbf{c}$ is the affine term of the affine dynamics model.
+
+\bigskip
+
+For systems with constraints the same linearization takes form:
+
+\begin{equation}
+\label{eq:CLTI}
+\begin{cases}
+    \dot{\mathbf{x}} = \mathbf{A} \mathbf{x} + \mathbf{B} \mathbf{u} + \mathbf{S} \lambda + \mathbf{c} \\
+    \mathbf{G}\dot{\mathbf{x}} = 0
+\end{cases}    
+\end{equation}
+
+where $\mathbf{S}$ is linearized constraint Jacobian and $\mathbf{G} = \begin{bmatrix} \mathbf{F} & \mathbf{0} \\ \dot{\mathbf{F}} & \mathbf{F} \end{bmatrix}$. 
+
+\end{flushleft}
+\end{frame}
+
+
+
+\begin{frame}{Implicit (minimal) representation of a constrained system}
+\framesubtitle{Part 1}
+\begin{flushleft}
+
+We can observe that constraint $\mathbf{G}\dot{\mathbf{x}} = 0$ implies that all feasible state velocities $\dot{\mathbf{x}}$ lie in the null space of $\mathbf{G}$. This means that we can introduce a new lower dimensional variable $\mathbf{z}$ to describe $\mathbf{x}$ (assuming initial value of $\mathbf{x}$ lies in the column space of $\mathbf{N}$):
+
+\begin{equation}
+    \mathbf{N}\mathbf{z} = \mathbf{x}
+\end{equation}
+
+where $\mathbf{N} = \text{null}(\mathbf{G})$ - orthonormal basis in the null space of $\mathbf{G}$. 
+\end{flushleft}
+\end{frame}
+
+
+\begin{frame}{Implicit (minimal) representation of a constrained system}
+\framesubtitle{Part 2}
+\begin{flushleft}
+
+Let us re-express dynamics \eqref{eq:CLTI} in terms of $\mathbf{z}$ by multiplying it by $\mathbf{N}^\top$ on the left:
+
+\begin{equation}
+    \mathbf{N}^\top \dot{\mathbf{x}} = \mathbf{N}^\top \mathbf{A} \mathbf{x} + \mathbf{N}^\top \mathbf{B} \mathbf{u} + \mathbf{N}^\top \mathbf{S} \lambda + \mathbf{N}^\top \mathbf{c}
+\end{equation}
+
+We can prove that $\mathbf{N}^\top \mathbf{S} = 0$ for all mechanical systems (for example, by observing that mechanical constrains do not do work) or check that our particular $\mathbf{S}$ lies in the row space of our $\mathbf{G}$.
+
+Noting that $\dot{\mathbf{z}} = \mathbf{N}^\top \dot{\mathbf{x}}$ and $\mathbf{x} = \mathbf{N}\mathbf{z}$ we get:
+
+\begin{equation}
+    \dot{\mathbf{z}} = \mathbf{N}^\top \mathbf{A} \mathbf{N} \mathbf{z} + \mathbf{N}^\top \mathbf{B} \mathbf{u} + \mathbf{N}^\top \mathbf{c}
+\end{equation}
+
+Defining $\mathbf{A}_N = \mathbf{N}^\top \mathbf{A} \mathbf{N}$, $\mathbf{B}_N = \mathbf{N}^\top \mathbf{B}$ and $\mathbf{c}_N = \mathbf{N}^\top \mathbf{c}$ we get:
+
+\begin{equation}
+    \dot{\mathbf{z}} = \mathbf{A}_N \mathbf{z} + \mathbf{B}_N \mathbf{u} + \mathbf{c}_N
+\end{equation}
+
+\end{flushleft}
+\end{frame}
+
+
+
+\begin{frame}{Implicit (minimal) representation of a constrained system}
+\framesubtitle{Part 3}
+\begin{flushleft}
+
+Since we achieved that our constrained dynamics is written in the standard LTI form:
+
+\begin{equation}
+    \dot{\mathbf{z}} = \mathbf{A}_N \mathbf{z} + \mathbf{B}_N \mathbf{u} + \mathbf{c}_N,
+\end{equation}
+
+we can use standard LTI control methods on it, for example finding optimal feedback gains via pole placement or LQR:
+
+\begin{equation}
+    \mathbf{K}_N = \text{lqr}(\mathbf{A}_N, \mathbf{B}_N, \mathbf{Q}, \mathbf{R})
+\end{equation}
+
+where $\mathbf{Q}$ and $\mathbf{R}$ are matrices defining cost function for the LQR problem.
+
+\end{flushleft}
+\end{frame}
+
+
+
+\begin{frame}{Inverse dynamics}
+\framesubtitle{LTI}
+\begin{flushleft}
+
+For any LTI system, including the LTI form of a constrained system we saw previously, inverse dynamics can be solved precisely by a pseudo-inverse, as long as there exist a solution. The following condition verifies it:
+
+\begin{equation}
+    (\mathbf{I} - \mathbf{B}\mathbf{B}^+)(\dot{\mathbf{x}} - \mathbf{A} \mathbf{x} - \mathbf{c}) = 0,
+\end{equation}
+
+The condition checks if vector $(\dot{\mathbf{x}} - \mathbf{A} \mathbf{x} - \mathbf{c})$ lies in the column space of $\mathbf{B}$. If it holds, precise solution to inverse kinematics can be found as:
+
+\begin{equation}
+    \mathbf{u}_{ID} = \mathbf{B}^+(\dot{\mathbf{x}} - \mathbf{A} \mathbf{x} - \mathbf{c}).
+\end{equation}
+
+\end{flushleft}
+\end{frame}
+
+
+
+\begin{frame}{Inverse dynamics}
+\framesubtitle{Manipulator equations}
+\begin{flushleft}
+
+For a constrained mechanical system we can solve inverse dynamics without the need for linearization. Consider the following dynamics:
+
+\begin{equation}
+    \mathbf{H}\ddot{\mathbf{q}} + \mathbf{C}\dot{\mathbf{q}} + \mathbf{g} = \mathbf{T}\mathbf{u} + \mathbf{F}^\top \lambda
+\end{equation}
+
+For that we represent constraint Jacobian $\mathbf{F}^\top$ as its QR decomposition: $\mathbf{F}^\top = \mathbf{Q} \begin{bmatrix} \mathbf{R} \\ \mathbf{0}  \end{bmatrix}$, where $\mathbf{Q}^\top \mathbf{Q} = \mathbf{Q} \mathbf{Q}^\top = \mathbf{I}$ and $\mathbf{R}$ is convertible.
+
+\begin{equation}
+    \mathbf{H}\ddot{\mathbf{q}} + \mathbf{C}\dot{\mathbf{q}} + \mathbf{g} = \mathbf{T}\mathbf{u} + \mathbf{Q} \begin{bmatrix} \mathbf{R} \\ \mathbf{0}  \end{bmatrix} \lambda
+\end{equation}
+
+
+\end{flushleft}
+\end{frame}
+
+
+\begin{frame}{Inverse dynamics}
+\framesubtitle{Manipulator equations, part 2}
+\begin{flushleft}
+
+Let us multiply the equation by $\mathbf{Q}^\top$:
+
+\begin{equation}
+    \mathbf{Q}^\top (\mathbf{H}\ddot{\mathbf{q}} + \mathbf{Q}^\top\mathbf{C}\dot{\mathbf{q}} + \mathbf{g}) = \mathbf{Q}^\top\mathbf{T}\mathbf{u} + \begin{bmatrix} \mathbf{R} \\ \mathbf{0}  \end{bmatrix} \lambda
+\end{equation}
+
+Introducing switching variables (to divide upper and lower part of the equations) $\mathbf{S}_1 = \begin{bmatrix} \mathbf{I} & \mathbf{0}  \end{bmatrix}$ and $\mathbf{S}_2 = \begin{bmatrix} \mathbf{0} & \mathbf{I}  \end{bmatrix}$ and multiplying equations by one and the other we get two systems:
+
+\begin{equation}
+\begin{cases}
+    \mathbf{S}_1 \mathbf{Q}^\top (\mathbf{H}\ddot{\mathbf{q}} + \mathbf{Q}^\top\mathbf{C}\dot{\mathbf{q}} + \mathbf{g}) = \mathbf{S}_1\mathbf{Q}^\top\mathbf{T}\mathbf{u} + \mathbf{R} \lambda \\
+    \mathbf{S}_2 \mathbf{Q}^\top (\mathbf{H}\ddot{\mathbf{q}} + \mathbf{Q}^\top\mathbf{C}\dot{\mathbf{q}} + \mathbf{g}) = \mathbf{S}_2\mathbf{Q}^\top\mathbf{T}\mathbf{u}
+\end{cases}
+\end{equation}
+
+The main advantage we achieved is that now we can calculate both $\mathbf{u}$ and $\lambda$
+
+\end{flushleft}
+\end{frame}
+
+
+\begin{frame}{Inverse dynamics}
+\framesubtitle{Manipulator equations, part 3}
+\begin{flushleft}
+
+Resulting expression for $\mathbf{u}$ is:
+
+\begin{equation}
+    \mathbf{u} = 
+    (\mathbf{S}_2\mathbf{Q}^\top\mathbf{T})^+ \mathbf{S}_2 \mathbf{Q}^\top (\mathbf{H}\ddot{\mathbf{q}} + \mathbf{Q}^\top\mathbf{C}\dot{\mathbf{q}} + \mathbf{g})
+\end{equation}
+
+Expression for $\lambda$ is:
+
+\begin{equation}
+\lambda = \mathbf{R}^{-1} \mathbf{S}_1 \mathbf{Q}^\top (\mathbf{H}\ddot{\mathbf{q}} + \mathbf{Q}^\top\mathbf{C}\dot{\mathbf{q}} + \mathbf{g} - \mathbf{T}\mathbf{u})
+\end{equation}
+
+We can notice a pseudo-inverse, implying that the no-residual solution does not have to exist.
+
+\end{flushleft}
+\end{frame}
+
+
+
+\begin{frame}{Inverse dynamics}
+\framesubtitle{Quadratic program}
+\begin{flushleft}
+
+We can easily write inverse dynamics as a QP:
+
+
+\begin{equation}
+\begin{aligned}
+& \underset{\mathbf{u}, \lambda}{\text{minimize}}
+& & ||\mathbf{u}||, \\
+& \text{subject to}
+& & \begin{cases}
+    \mathbf{H}\ddot{\mathbf{q}} + \mathbf{C}\dot{\mathbf{q}} + \mathbf{g} = \mathbf{T}\mathbf{u} + \mathbf{F}^\top \lambda \\
+    \mathbf{F}\ddot{\mathbf{q}} + \dot{\mathbf{F}}\dot{\mathbf{q}} = 0
+    \end{cases}
+\end{aligned}
+\end{equation}
+
+If there are some constraints or limits on the control input (torque limits, for instance) or the reaction forces are restricted (by friction cones, for instance), those can be directly added.
+
+\end{flushleft}
+\end{frame}
+
+
+\begin{frame}{Homework}
+% \framesubtitle{Parameter estimation}
+\begin{flushleft}
+
+Implement a model-predictive controller for an LTI system with implicit or explicit constraints.
+
+\end{flushleft}
+\end{frame}
+
+
+
+\begin{frame}
+\centerline{Lecture slides are available via Moodle.}
+\bigskip
+\centerline{You can help improve these slides at:}
+
+\centerline{\href{https://github.com/SergeiSa/Computational-Intelligence-Slides-Fall-2020}{github.com/SergeiSa/Computational-Intelligence-Slides-Fall-2020}}
+
+
+\bigskip
+\centerline{Check Moodle for additional links, videos, textbook suggestions.}
+\end{frame}
+
+\end{document}
