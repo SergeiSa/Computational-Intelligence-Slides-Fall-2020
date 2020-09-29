@@ -331,7 +331,7 @@ For a constrained mechanical system we can solve inverse dynamics without the ne
     \mathbf{H}\ddot{\mathbf{q}} + \mathbf{C}\dot{\mathbf{q}} + \mathbf{g} = \mathbf{T}\mathbf{u} + \mathbf{F}^\top \lambda
 \end{equation}
 
-For that we represent constraint Jacobian $\mathbf{F}^\top$ as its QR decomposition: $\mathbf{F}^\top = \mathbf{Q} \begin{bmatrix} \mathbf{R} \\ \mathbf{0}  \end{bmatrix}$, where $\mathbf{Q}^\top \mathbf{Q} = \mathbf{Q} \mathbf{Q}^\top = \mathbf{I}$ and $\mathbf{R}$ is convertible.
+For that we represent constraint Jacobian $\mathbf{F}^\top$ as its QR decomposition: $\mathbf{F}^\top = \mathbf{Q} \begin{bmatrix} \mathbf{R} \\ \mathbf{0}  \end{bmatrix}$, where $\mathbf{Q}^\top \mathbf{Q} = \mathbf{Q} \mathbf{Q}^\top = \mathbf{I}$ and $\mathbf{R}$ is invertible.
 
 \begin{equation}
     \mathbf{H}\ddot{\mathbf{q}} + \mathbf{C}\dot{\mathbf{q}} + \mathbf{g} = \mathbf{T}\mathbf{u} + \mathbf{Q} \begin{bmatrix} \mathbf{R} \\ \mathbf{0}  \end{bmatrix} \lambda
@@ -349,15 +349,15 @@ For that we represent constraint Jacobian $\mathbf{F}^\top$ as its QR decomposit
 Let us multiply the equation by $\mathbf{Q}^\top$:
 
 \begin{equation}
-    \mathbf{Q}^\top (\mathbf{H}\ddot{\mathbf{q}} + \mathbf{Q}^\top\mathbf{C}\dot{\mathbf{q}} + \mathbf{g}) = \mathbf{Q}^\top\mathbf{T}\mathbf{u} + \begin{bmatrix} \mathbf{R} \\ \mathbf{0}  \end{bmatrix} \lambda
+    \mathbf{Q}^\top (\mathbf{H}\ddot{\mathbf{q}} + \mathbf{C}\dot{\mathbf{q}} + \mathbf{g}) = \mathbf{Q}^\top\mathbf{T}\mathbf{u} + \begin{bmatrix} \mathbf{R} \\ \mathbf{0}  \end{bmatrix} \lambda
 \end{equation}
 
 Introducing switching variables (to divide upper and lower part of the equations) $\mathbf{S}_1 = \begin{bmatrix} \mathbf{I} & \mathbf{0}  \end{bmatrix}$ and $\mathbf{S}_2 = \begin{bmatrix} \mathbf{0} & \mathbf{I}  \end{bmatrix}$ and multiplying equations by one and the other we get two systems:
 
 \begin{equation}
 \begin{cases}
-    \mathbf{S}_1 \mathbf{Q}^\top (\mathbf{H}\ddot{\mathbf{q}} + \mathbf{Q}^\top\mathbf{C}\dot{\mathbf{q}} + \mathbf{g}) = \mathbf{S}_1\mathbf{Q}^\top\mathbf{T}\mathbf{u} + \mathbf{R} \lambda \\
-    \mathbf{S}_2 \mathbf{Q}^\top (\mathbf{H}\ddot{\mathbf{q}} + \mathbf{Q}^\top\mathbf{C}\dot{\mathbf{q}} + \mathbf{g}) = \mathbf{S}_2\mathbf{Q}^\top\mathbf{T}\mathbf{u}
+    \mathbf{S}_1 \mathbf{Q}^\top (\mathbf{H}\ddot{\mathbf{q}} + \mathbf{C}\dot{\mathbf{q}} + \mathbf{g}) = \mathbf{S}_1\mathbf{Q}^\top\mathbf{T}\mathbf{u} + \mathbf{R} \lambda \\
+    \mathbf{S}_2 \mathbf{Q}^\top (\mathbf{H}\ddot{\mathbf{q}} + \mathbf{C}\dot{\mathbf{q}} + \mathbf{g}) = \mathbf{S}_2\mathbf{Q}^\top\mathbf{T}\mathbf{u}
 \end{cases}
 \end{equation}
 
@@ -375,13 +375,13 @@ Resulting expression for $\mathbf{u}$ is:
 
 \begin{equation}
     \mathbf{u} = 
-    (\mathbf{S}_2\mathbf{Q}^\top\mathbf{T})^+ \mathbf{S}_2 \mathbf{Q}^\top (\mathbf{H}\ddot{\mathbf{q}} + \mathbf{Q}^\top\mathbf{C}\dot{\mathbf{q}} + \mathbf{g})
+    (\mathbf{S}_2\mathbf{Q}^\top\mathbf{T})^+ \mathbf{S}_2 \mathbf{Q}^\top (\mathbf{H}\ddot{\mathbf{q}} + \mathbf{C}\dot{\mathbf{q}} + \mathbf{g})
 \end{equation}
 
 Expression for $\lambda$ is:
 
 \begin{equation}
-\lambda = \mathbf{R}^{-1} \mathbf{S}_1 \mathbf{Q}^\top (\mathbf{H}\ddot{\mathbf{q}} + \mathbf{Q}^\top\mathbf{C}\dot{\mathbf{q}} + \mathbf{g} - \mathbf{T}\mathbf{u})
+\lambda = \mathbf{R}^{-1} \mathbf{S}_1 \mathbf{Q}^\top (\mathbf{H}\ddot{\mathbf{q}} + \mathbf{C}\dot{\mathbf{q}} + \mathbf{g} - \mathbf{T}\mathbf{u})
 \end{equation}
 
 We can notice a pseudo-inverse, implying that the no-residual solution does not have to exist.
