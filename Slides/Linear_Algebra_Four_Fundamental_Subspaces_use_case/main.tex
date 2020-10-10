@@ -131,7 +131,7 @@ Given LTI system $\dot{\mathbf{x}} = \mathbf{A} \mathbf{x} + \mathbf{B} \mathbf{
 Solution: 
 
 \begin{enumerate}
-    \item We can check that $(\mathbf{A}-\mathbf{B}\mathbf{K}) \mathbf{x}^* + \mathbf{B} \mathbf{u}^* = \mathbf{0}$ has a solution, in other words that $(\mathbf{A}-\mathbf{B}\mathbf{K}) \mathbf{x}^* \in \text{col}(\mathbf{B})$. Resulting condition is: $(\mathbf{I} - \mathbf{B}\mathbf{B}^+)(\mathbf{A}-\mathbf{B}\mathbf{K})\mathbf{x}^* = \mathbf{0}$
+    \item We can check that $(\mathbf{A}-\mathbf{B}\mathbf{K}) \mathbf{x}^* + \mathbf{B} \mathbf{u}^* = \mathbf{0}$ has a solution, in other words that $(\mathbf{A}-\mathbf{B}\mathbf{K}) \mathbf{x}^* \in \text{col}(\mathbf{B})$. Resulting condition is: $(\mathbf{I} - \mathbf{B}\mathbf{K}^+)(\mathbf{A}-\mathbf{B}\mathbf{K})\mathbf{x}^* = \mathbf{0}$
     \item This means finding such $\mathbf{u}^*$ that $(\mathbf{A}-\mathbf{B}\mathbf{K}) \mathbf{x}^* + \mathbf{B}\mathbf{u}^*= \mathbf{0}$. This is done via pseudo-inverse, which provides exact solution, as long as it exists: $\mathbf{u}^*= -\mathbf{B}^+(\mathbf{A}-\mathbf{B}\mathbf{K}) \mathbf{x}^*$.
 \end{enumerate}
 
