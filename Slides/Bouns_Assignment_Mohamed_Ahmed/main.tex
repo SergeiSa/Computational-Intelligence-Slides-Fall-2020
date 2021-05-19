@@ -1,0 +1,105 @@
+\documentclass{article}
+\usepackage[utf8]{inputenc}
+\usepackage[margin=2cm]{geometry}
+\usepackage{fullpage,enumitem,amssymb,amsmath,xcolor,cancel,gensymb,hyperref,graphicx}
+\usepackage{indentfirst}
+\setlength{\parskip}{1em}
+\usepackage{amsmath,amsfonts,amssymb,amsthm}
+\usepackage{mathtools}
+\usepackage{commath}
+\usepackage[sc,osf]{mathpazo}
+
+
+%\begin{align*}…\end{align*} if you want to fit an equation. 
+%FOR PICTUREs: include graphicsx 
+%\includegraphics[scale=x]{name}
+%double space and write caption in the center classshe 
+
+\title{Computational Intellgience \\Bouns Assignment}
+\author{Mohamed Ahmed}
+
+
+\begin{document}
+
+\maketitle
+
+Our Objective:
+\begin{equation}
+min_{x} max_{y} \norm{x-x^*}
+\end{equation}
+
+
+subject To:
+\begin{equation}
+(y-a)^T D (x-b) + s^T y+ q^T x \leq h 
+\end{equation}
+
+\begin{equation}
+    \norm{Hy+f}\leq P
+\end{equation}
+
+let: 
+\begin{equation}
+    v=Hy+f
+\end{equation}
+
+Thats make our y :
+\begin{equation}
+    y=H^{-1} (v-f)
+\end{equation}
+
+that make our constrain in eq3 be: 
+\begin{equation}
+    \norm{v}\leq P
+\end{equation}
+
+but our objective function will change too :
+
+
+\begin{equation}
+(H^{-1}(v-f)-a)^T D (x-b) + s^T H^{-1} (v-f)+ q^T x \leq h
+\end{equation}
+
+
+\begin{equation}
+v^T H^{-T} D (x-b)-(H^{-1}f+a)^T D (x-b) + v^T H^{-T} s - f^T H^{-T} s+ q^T x \leq h
+\end{equation}
+
+
+\begin{equation}
+v^T H^{-T} D (x-b)-(f+H a)^T H^{-T} D (x-b) + v^T H^{-T} s - f^T H^{-T} s+ q^T x \leq h
+\end{equation}
+
+
+\begin{equation}
+v^T H^{-T} D (x-b)-(f+H a)^T H^{-T} D (x-b) + v^T H^{-T} s - f^T H^{-T} s+ q^T x \leq h
+\end{equation}
+
+\begin{equation}
+v^T H^{-T} [D (x-b)+s ]-(f+H a)^T H^{-T} D (x-b) - f^T H^{-T} s+ q^T x \leq h
+\end{equation}
+
+
+\begin{equation}
+p \frac{[D (x-b)+s]^T  H^{-1} H^{-T} [D (x-b)+s ]}{\norm{[D (x-b)+s]^T  H^{-1}}  }-(f+H a)^T H^{-T} D (x-b) - f^T H^{-T} s+ q^T x \leq h
+\end{equation}
+
+
+\begin{equation}
+p \norm{[D (x-b)+s]^T  H^{-1}}   \leq h +(f+H a)^T H^{-T} D (x-b) + f^T H^{-T} s - q^T x
+\end{equation}
+
+therefore:
+Our Objective will be:
+\begin{equation}
+min_{x}  \norm{x-x^*}
+\end{equation}
+
+subject to:
+\begin{equation}
+p \norm{[D (x-b)+s]^T  H^{-1}}   \leq h +(f+H a)^T H^{-T} D (x-b) + f^T H^{-T} s - q^T x
+\end{equation}
+
+
+
+\end{document}
